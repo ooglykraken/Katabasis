@@ -30,6 +30,18 @@ public class Gameplay : MonoBehaviour {
 		foreach(GameObject o in GameObject.FindGameObjectsWithTag("StairsDown")){
 			Destroy(o);
 		}
+		foreach(GameObject o in GameObject.FindGameObjectsWithTag("FloorSwitch")){
+			Destroy(o);
+		}
+		foreach(GameObject o in GameObject.FindGameObjectsWithTag("WallSwitch")){
+			Destroy(o);
+		}
+		foreach(GameObject o in GameObject.FindGameObjectsWithTag("Block")){
+			Destroy(o);
+		}
+		foreach(GameObject o in GameObject.FindGameObjectsWithTag("Door")){
+			Destroy(o);
+		}
 	}
 	
 	private static Gameplay instance = null;

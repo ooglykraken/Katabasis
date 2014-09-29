@@ -4,26 +4,45 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	private float movementSpeed = 5f;
+	public float lightLostPerFrame = .001f;
+	private float startingLightIntensity;
 	
 	private int verticalDirection;
 	private int horizontalDirection;
 	
 	private bool hasFloorKey;
 	
+	private Transform lanternTransform;
+	
+	private GameObject lantern;
+	
 	public void Awake(){
 		hasFloorKey = false;
+		
+		lanternTransform = transform.Find("Lantern");
+		lantern = lanternTransform.gameObject;
+		
+		startingLightIntensity = lantern.GetComponent<Light>().intensity;
 	}
 	
 	public void OnCollisionEnter(Collision c){
-	
-		if(c.transform.parent.tag == "Key"){
-			PickUpKey(c.transform.parent.gameObject);
-		} else if(c.transform.parent.tag == "StairsDown"){
-			Descend();
-		} else if(c.transform.parent.tag == "Enemy"){
-			Death();
-		} else if(c.transform.parent.tag == "StairsUp"){
-			Finish();
+		
+		if(c.transform.parent)
+		{
+			if(c.transform.parent.tag == "Key"){
+				PickUpKey(c.transform.parent.gameObject);
+			} else if(c.transform.parent.tag == "StairsDown"){
+				if(hasFloorKey){
+					Descend();
+				} else {
+					//He doesnt have the key yet
+				}
+			} else if(c.transform.parent.tag == "Enemy"){
+				Death();
+			} else if(c.transform.parent.tag == "StairsUp"){
+				Finish();
+			} else {
+			}
 		}
 	}
 	
@@ -32,6 +51,8 @@ public class Player : MonoBehaviour {
 		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 		
 		Move();
+		
+		LoseLight();
 	}
 	
 	public void LateUpdate(){
@@ -41,15 +62,22 @@ public class Player : MonoBehaviour {
 	private void Move(){
 		rigidbody.velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
 		
-		if(verticalDirection < 0){
-			Turn("south");
-		} else if(verticalDirection > 0){
-			Turn("north");
-		}
-		if(horizontalDirection < 0){
-			Turn("west");
-		} else if(horizontalDirection > 0){
-			Turn("east");
+		if(verticalDirection < 0 && horizontalDirection == 0){
+			Turn("down");
+		} else if(verticalDirection > 0 && horizontalDirection == 0){
+			Turn("up");
+		} else if(horizontalDirection < 0 && verticalDirection == 0){
+			Turn("left");
+		} else if(horizontalDirection > 0 && verticalDirection == 0){
+			Turn("right");
+		} else if(horizontalDirection > 0 && verticalDirection < 0){
+			Turn("r-d");
+		} else if(horizontalDirection < 0 && verticalDirection < 0){
+			Turn("l-d");
+		} else if(horizontalDirection > 0 && verticalDirection > 0){
+			Turn("r-u");
+		} else if(horizontalDirection < 0 && verticalDirection > 0){
+			Turn("l-u");
 		}
 	}
 	
@@ -66,9 +94,18 @@ public class Player : MonoBehaviour {
 	private void Descend(){
 		if(Gameplay.Instance().currentLevel <= Gameplay.Instance().finalLevel){
 			Gameplay.Instance().NextLevel();
+			lantern.GetComponent<Light>().intensity = startingLightIntensity;
 		} else {
 			//Finish();
 		}
+		
+		hasFloorKey = false;
+	}
+	
+	private void LoseLight(){
+		
+		lantern.GetComponent<Light>().intensity -= lightLostPerFrame;
+		lantern.GetComponent<Light>().spotAngle = lantern.GetComponent<Light>().intensity * 10f;
 	}
 	
 	private void Death(){
@@ -83,17 +120,29 @@ public class Player : MonoBehaviour {
 		Vector3 newFacing = new Vector3(0f, 0f, 0f);
 	
 		switch(direction){
-			case "north":
+			case "up":
 				newFacing = new Vector3(0f, 0f, 0f);
 				break;
-			case "south":
+			case "down":
 				newFacing = new Vector3(0f, 0f, 180f);	
 				break;
-			case "east":
+			case "left":
+				newFacing = new Vector3(0f, 0f, 90f);
+				break;
+			case "right":
 				newFacing = new Vector3(0f, 0f, 270f);
 				break;
-			case "west":
-				newFacing = new Vector3(0f, 0f, 90f);
+			case "r-d":
+				newFacing = new Vector3(0f, 0f, 225f);
+				break;
+			case "l-d":
+				newFacing = new Vector3(0f, 0f, 135f);
+				break;
+			case "r-u":
+				newFacing = new Vector3(0f, 0f, 325f);
+				break;
+			case "l-u":
+				newFacing = new Vector3(0f, 0f, 45f);
 				break;
 			default:
 				break;
@@ -104,7 +153,7 @@ public class Player : MonoBehaviour {
 	
 	private void CameraFollow(){
 		float cameraOffset = .6f;
-		
+		float cameraTiltAdjustment = -3;
 		Camera main = Camera.main;
 		
 		if(transform.position.x  >  main.transform.position.x + cameraOffset){
@@ -113,9 +162,9 @@ public class Player : MonoBehaviour {
 			main.transform.position = new Vector3( transform.position.x + cameraOffset, main.transform.position.y, main.transform.position.z);
 		}
 		if(transform.position.y  >  main.transform.position.y + cameraOffset){
-			main.transform.position = new Vector3(main.transform.position.x, transform.position.y - cameraOffset, main.transform.position.z);
+			main.transform.position = new Vector3(main.transform.position.x, transform.position.y - cameraOffset + cameraTiltAdjustment, main.transform.position.z);
 		} else if(transform.position.y  <  main.transform.position.y - cameraOffset){
-			main.transform.position = new Vector3(main.transform.position.x, transform.position.y + cameraOffset, main.transform.position.z);
+			main.transform.position = new Vector3(main.transform.position.x, transform.position.y + cameraOffset + cameraTiltAdjustment, main.transform.position.z);
 		}
 	}
 	
