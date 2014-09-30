@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
 	private float movementSpeed = 5f;
 	public float lightLostPerFrame = .001f;
 	private float startingLightIntensity;
+	private float startingLightRange;
 	
 	private int verticalDirection;
 	private int horizontalDirection;
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour {
 		lanternTransform = transform.Find("Lantern");
 		lantern = lanternTransform.gameObject;
 		
+		startingLightRange = lantern.GetComponent<Light>().range;
 		startingLightIntensity = lantern.GetComponent<Light>().intensity;
 	}
 	
@@ -53,6 +55,10 @@ public class Player : MonoBehaviour {
 		Move();
 		
 		LoseLight();
+		
+		if(!CheckForWalls()){
+			lantern.GetComponent<Light>().range = startingLightRange;
+		}
 	}
 	
 	public void LateUpdate(){
@@ -106,6 +112,25 @@ public class Player : MonoBehaviour {
 		
 		lantern.GetComponent<Light>().intensity -= lightLostPerFrame;
 		lantern.GetComponent<Light>().spotAngle = lantern.GetComponent<Light>().intensity * 10f;
+	}
+	
+	private bool CheckForWalls(){
+		
+		float distance = startingLightRange;
+		RaycastHit hit;
+	
+		Vector3 ray  = new Vector3(transform.position.x , transform.position.y , 0f);
+		if (Physics.Raycast(ray, transform.up, out hit)) {
+			if (Vector3.Distance(transform.position, hit.point) <= distance){
+				//hitPoint = hit.point;
+				//return hit.collider.gameObject;
+				
+				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	private void Death(){

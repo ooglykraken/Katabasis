@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doc>
+	<levels>
+		<level number="0">
+			<levelObjects>
+				<object type="player" x="0" y="8" />
+				<object type="key" x="-11" y="1" />
+				<object type="stairs" x="0" y="-9" />
+				<object type="block" x="-8" y="1" sizeX="1" sizeY="1" />
+				<object type="wallSwitch"  x="4.75" y="4" sizeX="0.5" sizeY="0.5" />
+				<object type="floorSwitch"  x="0" y="0" sizeX="1" sizeY="1" />
+				<object type="door" x="0" y="-3.5" sizeX="10" sizeY="1" />
+				<object type="door" x="-5.5" y="1" sizeX="1" sizeY="8" />
+			</levelObjects>
+			<walls>
+				<wall x="0" y="10.5" sizeX="12" sizeY="1" />
+				<wall x="-5.5" y="7.5" sizeX="1" sizeY="5" />
+				<wall x="5.5" y="0" sizeX="1" sizeY="20" />
+				<wall x="-13.5" y="1" sizeX="1" sizeY="8" />
+				<wall x="0" y="-10.5" sizeX="12" sizeY="1" />
+				<wall x="-10" y="-3.5" sizeX="8" sizeY="1" />
+				<wall x="-10" y="5.5" sizeX="8" sizeY="1" />
+				<wall x="-5.5" y="-6.5" sizeX="1" sizeY="7" />
+			</walls>
+			<floors>
+				<floor x="0" y="0" sizeX="10" sizeY="20" />
+				<floor x="-9" y="1" sizeX="8" sizeY="8" />
+			</floors>
+		</level>
+		<level number="1">
+			<levelObjects>
+				<object type="player" x="0" y="0"/>
+				<object type="key" x="-18" y="-18" />
+				<object type="stairs" x="0" y="18" />
+			</levelObjects>
+			<floors>
+				<floor x="0" y="0" sizeX="40" sizeY="40" />
+			</floors>
+			<walls>
+				<wall x="20" y="0" sizeX="1" sizeY="41" />
+				<wall x="-20" y="0" sizeX="1" sizeY="41" />
+				<wall x="0" y="-20" sizeX="39" sizeY="1" />
+				<wall x="0" y="20" sizeX="39" sizeY="1" />
+			</walls>
+		</level>
+		<level number="2">
+			<levelObjects>
+				<object type="player" x="-18" y="-18"/>
+				<object type="key" x="10" y="-17" />
+				<object type="stairs" x="10" y="16" />
+			</levelObjects>
+			<floors>
+				<floor x="0" y="0" sizeX="12" sizeY="10" />
+				<floor x="-14" y="-8" sizeX="16" sizeY="26" />
+				<floor x="11" y="0" sizeX="10" sizeY="40" />
+			</floors>
+			<walls>
+				<wall x="16.5" y="0" sizeX="1" sizeY="40" />
+				<wall x="-22.5" y="-8" sizeX="1" sizeY="26" />
+				<wall x="-8.5" y="5.5" sizeX="29" sizeY="1" />
+				<wall x="5.5" y="13" sizeX="1" sizeY="14" />
+				<wall x="5.5" y="13" sizeX="1" sizeY="14" />
+				<wall x="0" y="-5.5" sizeX="10" sizeY="1" />
+				<wall x="11" y="20.5" sizeX="12" sizeY="1" />
+				<wall x="5.5" y="-12.5" sizeX="1" sizeY="15" />
+				<wall x="-14" y="-21.5" sizeX="18" sizeY="1" />
+				<wall x="11" y="-20.5" sizeX="12" sizeY="1" />
+				<wall x="-5.5" y="-13" sizeX="1" sizeY="16" />
+			</walls>
+			<enemies>
+			</enemies>
+		</level>
+		<level number="3">
+			<levelObjects>
+				<object type="player" x="-15" y="-6"/>
+				<object type="key" x="0" y="0" />
+				<object type="stairs" x="-14" y="10" />
+			</levelObjects>
+			<walls>
+				<wall x="7" y="-15" sizeX="1" sizeY="9" />
+				<wall x="-5.5" y="-10" sizeX="26" sizeY="1" />
+				<wall x="7" y="17" sizeX="1" sizeY="5" />
+				<wall x="3" y="17.5" sizeX="1" sizeY="6" />
+				<wall x="-18" y="10" sizeX="1" sizeY="7" />
+				<wall x="4.5" y="6" sizeX="4" sizeY="1" />
+				<wall x="-10.5" y="14" sizeX="16" sizeY="1" />
+				<wall x="10" y="20" sizeX="7" sizeY="1" />
+				<wall x="-3" y="17.5" sizeX="1" sizeY="6" />
+				<wall x="13" y="0" sizeX="1" sizeY="40" />
+				<wall x="-3" y="1.7" sizeX="1" sizeY="7.7" />
+				<wall x="5" y="14" sizeX="5" sizeY="1" />
+				<wall x="-5.5" y="-2.5" sizeX="26" sizeY="1" />
+				<wall x="3" y="1.7" sizeX="1" sizeY="7.6" />
+				<wall x="7" y="2.25" sizeX="1" sizeY="8.5" />
+				<wall x="-10.5" y="6" sizeX="16" sizeY="1" />
+				<wall x="10" y="-20" sizeX="7" sizeY="1" />
+				<wall x="0" y="20" sizeX="5" sizeY="1" />
+				<wall x="-18" y="-6.3" sizeX="1" sizeY="6.6" />
+			</walls>
+			<floors>
+				<floor x="10" y="0" sizeX="5" sizeY="40" />
+				<floor x="0" y="5" sizeX="5" sizeY="30" />
+				<floor x="-10" y="10" sizeX="15" sizeY="7" />
+				<floor x="5" y="10" sizeX="5" sizeY="7" />
+				<floor x="5" y="-6.5" sizeX="5" sizeY="7" />
+				<floor x="-10" y="-6.5" sizeX="15" sizeY="7" />
+			</floors>
+			<enemies>
+			</enemies>
+		</level>
+		<level number="4">
+			<levelObjects>
+				<object type="player" x="-14" y="-14" />
+				<object type="key" x="-13" y="10" />
+				<object type="stairs" x="-13" y="-9" />
+			</levelObjects>
+			<walls>
+				<wall x="-4" y="1.5" sizeX="1" sizeY="20" />
+				<wall x="-8" y="-3.5" sizeX="1" sizeY="16" />
+				<wall x="-13" y="8" sizeX="4" sizeY="1" />
+				<wall x="-10.5" y="10" sizeX="1" sizeY="5" />
+				<wall x="-1" y="12" sizeX="18" sizeY="1" />
+				<wall x="-13" y="-6" sizeX="4" sizeY="1" />
+				<wall x="-10.5" y="-2" sizeX="4" sizeY="1" />
+				<wall x="-13" y="4" sizeX="4" sizeY="1" />
+				<wall x="11.5" y="9" sizeX="1" sizeY="12" />
+				<wall x="4.5" y="8" sizeX="8" sizeY="1" />
+				<wall x="10" y="-6" sizeX="10" sizeY="1" />
+				<wall x="9" y="0" sizeX="12" sizeY="1" />
+				<wall x="-2" y="-12" sizeX="26" sizeY="1" />
+				<wall x="0" y="-15.5" sizeX="32" sizeY="1" />
+				<wall x="-15.5" y="0" sizeX="1" sizeY="30" />
+				<wall x="0" y="15.5" sizeX="32" sizeY="1" />
+				<wall x="0" y="-1.5" sizeX="1" sizeY="20" />
+				<wall x="15.5" y="0" sizeX="1" sizeY="30" />
+			</walls>
+			<floors>
+				<floor x="0" y="0" sizeX="30" sizeY="30" />
+			</floors>
+			<enemies>
+			</enemies>
+		</level>
+	</levels>
+</doc>
