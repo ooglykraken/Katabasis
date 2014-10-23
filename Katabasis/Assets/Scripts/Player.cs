@@ -13,6 +13,11 @@ public class Player : MonoBehaviour {
 	
 	private bool hasFloorKey;
 	
+	//Added for SmokeEnemy 
+	private bool isSlowed;
+	private float slowTimer;
+	private GameObject enemy;
+	
 	private Transform lanternTransform;
 	
 	private GameObject lantern;
@@ -20,11 +25,21 @@ public class Player : MonoBehaviour {
 	public void Awake(){
 		hasFloorKey = false;
 		
+		//Added for SmokeEnemy slow effect
+		isSlowed = false;
+		slowTimer = 0f;
+		
 		lanternTransform = transform.Find("Lantern");
 		lantern = lanternTransform.gameObject;
 		
 		startingLightRange = lantern.GetComponent<Light>().range;
 		startingLightIntensity = lantern.GetComponent<Light>().intensity;
+	}
+	
+	// Click player to reduce the slow time
+	public void OnMouseDown()
+	{
+		slowTimer -= 100f;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -46,6 +61,13 @@ public class Player : MonoBehaviour {
 			} else {
 			}
 		}
+		
+		// Start for the slow effect
+		if (c.transform.tag == "SmokeEnemy" )
+		{
+			isSlowed = true;
+			slowTimer = 250f;
+		}
 	}
 	
 	public void FixedUpdate(){
@@ -64,6 +86,13 @@ public class Player : MonoBehaviour {
 		if(!CheckForWalls() ){
 			lantern.GetComponent<Light>().range = startingLightRange;
 		}
+		
+		//Check the SmokeEnemy related stuff
+		if (isSlowed == true)
+			Slowed();
+			
+		CheckForSmokeEnemy();
+		
 	}
 	
 	public void LateUpdate(){
@@ -90,6 +119,19 @@ public class Player : MonoBehaviour {
 		}
 	
 		rigidbody.velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
+	}
+	
+	private void Slowed()
+	{
+		if (slowTimer > 0f){
+			slowTimer--;
+			movementSpeed = 2.5f;
+			lightLostPerFrame = .003f;
+		}else{
+			movementSpeed = 5f;
+			isSlowed = false;
+			lightLostPerFrame = .001f;
+		}
 	}
 	
 	private void PickUpKey(GameObject key){
@@ -130,6 +172,7 @@ public class Player : MonoBehaviour {
 				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point) + .5f;
 				return true;
 			}
+
 		}
 		
 		return false;
@@ -147,6 +190,23 @@ public class Player : MonoBehaviour {
 		}
 		
 		return "";
+	}
+	
+	private void CheckForSmokeEnemy()
+	{
+		//Added this for the stunning of SmokeEnemy 
+		RaycastHit hit;
+		
+		Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.position.z );
+		
+		if (Physics.Raycast(ray, transform.up, out hit, 5f)) 
+		{
+			if ((hit.transform.tag == "SmokeEnemy"))
+			{
+				hit.transform.GetComponent<SmokeEnemy>().isHitByLight = true;
+			}
+		}
+		
 	}
 	
 	private void Death(){
