@@ -8,9 +8,9 @@ public class MainMenu : MonoBehaviour {
 			case "StartGame":
 				StartGame();
 				break;
-			// case "Instructions":
-				// Instructions();
-				// break;
+			case "Settings":
+				Settings();
+				break;
 			default:
 				break;
 		}
@@ -20,7 +20,14 @@ public class MainMenu : MonoBehaviour {
 		Application.LoadLevel("Gameplay");
 	}
 	
-	// private void Instructions(){
-		// Popup p = Instantiate(Resources.Load("UI/Popup", typeof(Popup)) as Popup) as Popup; 
-	// }
+	private void Settings(){
+		GameObject p = Instantiate(Resources.Load("UI/Popup", typeof(GameObject)) as GameObject) as GameObject; 
+		p.transform.parent = GameObject.Find("MainMenu").transform;
+		foreach(GameObject g in GameObject.FindGameObjectsWithTag("UIText")){
+			if(g.transform.parent.parent.name != "Popup(Clone)"){
+				
+				g.GetComponent<Renderer>().enabled = false;
+			}
+		}
+	}
 }

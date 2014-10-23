@@ -4,16 +4,16 @@ using System.Collections;
 public class Door : MonoBehaviour {
 
 	public void Destroy(){
-		Renderer model = transform.Find("Model").GetComponent<Renderer>();
-		Collider collider = transform.Find("Collider").GetComponent<Collider>();
+		Renderer model = GetComponent<Renderer>();
+		Collider collider = GetComponent<Collider>();
 		
 		model.enabled = false;
 		collider.enabled = false;
 	}
 	
 	public void Reappear(){
-		Renderer model = transform.Find("Model").GetComponent<Renderer>();
-		Collider collider = transform.Find("Collider").GetComponent<Collider>();
+		Renderer model = GetComponent<Renderer>();
+		Collider collider = GetComponent<Collider>();
 		
 		collider.enabled = true;
 		model.enabled = true;

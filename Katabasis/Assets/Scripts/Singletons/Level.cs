@@ -48,7 +48,7 @@ public class Level : MonoBehaviour {
 		}
 		
 		XMLNodeList invisiblesXML = currentLevelXML.GetNodeList("floors>0>invisibleFloor");
-		// Debug.Log(invisiblesXML);
+
 		if(invisiblesXML != null)
 			foreach(XMLNode floorXML in invisiblesXML){
 				GameObject floorTile = Instantiate(Resources.Load("InvisibleFloor", typeof(GameObject)) as GameObject) as GameObject;
@@ -64,7 +64,18 @@ public class Level : MonoBehaviour {
 			wall.transform.localScale = new Vector3(float.Parse(wallXML.GetValue("@sizeX")), float.Parse(wallXML.GetValue("@sizeY")), 5f);
 			
 			wall.transform.parent = walls.transform;
-		}
+		}		
+			
+		XMLNodeList illusoryXML = currentLevelXML.GetNodeList("walls>0>illusoryWall");
+		
+		if(illusoryXML != null)
+			foreach(XMLNode wallXML in illusoryXML){
+				GameObject wall = Instantiate(Resources.Load("IllusoryWall", typeof(GameObject)) as GameObject) as GameObject;
+				wall.transform.position = new Vector3(float.Parse(wallXML.GetValue("@x")), float.Parse(wallXML.GetValue("@y")), -1f);
+				wall.transform.localScale = new Vector3(float.Parse(wallXML.GetValue("@sizeX")), float.Parse(wallXML.GetValue("@sizeY")), 5f);
+				
+				wall.transform.parent = walls.transform;
+			}
 		
 		XMLNodeList levelObjectsXML = currentLevelXML.GetNodeList("levelObjects>0>object");
 		
@@ -95,7 +106,7 @@ public class Level : MonoBehaviour {
 			switch(type){
 				case "door":
 					o = Instantiate(Resources.Load("Door", typeof(GameObject)) as GameObject) as GameObject;
-					o.transform.position = new Vector3(float.Parse(objectXML.GetValue("@x")), float.Parse(objectXML.GetValue("@y")), -.5f);
+					o.transform.position = new Vector3(float.Parse(objectXML.GetValue("@x")), float.Parse(objectXML.GetValue("@y")), 0f);
 					o.transform.localScale = new Vector3(float.Parse(objectXML.GetValue("@sizeX")), float.Parse(objectXML.GetValue("@sizeY")), 1f);
 					o.transform.parent = gameplay.transform;
 					doorList.Add(o);
@@ -166,6 +177,20 @@ public class Level : MonoBehaviour {
 					f.downTarget = doorList[0];
 				}
 				
+				break;
+			case 2:
+				foreach(GameObject o in GameObject.FindGameObjectsWithTag("WallSwitch")){
+					w = o.GetComponent<WallSwitch>();
+					w.argument = "InvisibleFloor";
+					w.target = o;
+					w.function = "Create";
+				}
+				foreach(GameObject o in GameObject.FindGameObjectsWithTag("FloorSwitch")){
+					f = o.GetComponent<FloorSwitch>();
+					
+					f.upTarget = doorList[0];
+					f.downTarget = doorList[0];
+				}
 				break;
 			default:
 				break;

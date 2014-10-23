@@ -4,12 +4,15 @@ using System.Collections;
 public class Gameplay : MonoBehaviour {
 	
 	public int currentLevel;
-	public int finalLevel = 4;
+	public int finalLevel;
+	
+	public bool testing;
 	
 	public void Awake(){		
 		// currentLevel = 0;
-	
-		// NextLevel();
+		
+		if(!testing)
+			NextLevel();
 	}
 	
 	public void NextLevel(){

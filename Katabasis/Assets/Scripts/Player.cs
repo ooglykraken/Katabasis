@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	private float movementSpeed = 5f;
+	private float movementSpeed = 2.5f;
 	public float lightLostPerFrame = .001f;
 	private float startingLightIntensity;
 	private float startingLightRange;
@@ -12,6 +12,7 @@ public class Player : MonoBehaviour {
 	private int horizontalDirection;
 	
 	private bool hasFloorKey;
+	private bool isUsingPointer;
 	
 	private Transform lanternTransform;
 	
@@ -25,6 +26,8 @@ public class Player : MonoBehaviour {
 		
 		startingLightRange = lantern.GetComponent<Light>().range;
 		startingLightIntensity = lantern.GetComponent<Light>().intensity;
+		
+		isUsingPointer = !Settings.Instance().isUsingDpad;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -49,16 +52,28 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void FixedUpdate(){
-		verticalDirection = (int)Input.GetAxisRaw("Vertical");
-		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
+		#if UNITY_EDITOR
+			verticalDirection = (int)Input.GetAxisRaw("Vertical");
+			horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
+		#endif
 		
+		#if UNITY_ANDROID
+			if(!isUsingPointer){
+				DPad();
+			} else {
+				PointerMove();
+			}
+		#endif
 		
 		string floorCast = CheckFloor();
 		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor"){
-			Move();
+			if(!isUsingPointer){
+				Move();
+			}
 		} else {
 			rigidbody.velocity = Vector3.zero;
 		}
+		
 		LoseLight();
 		
 		if(!CheckForWalls() ){
@@ -68,6 +83,56 @@ public class Player : MonoBehaviour {
 	
 	public void LateUpdate(){
 		CameraFollow();
+	}
+	
+	private void DPad(){
+		float dpadSensitivity = 2.5f;
+		
+		Touch touch = Input.GetTouch(0);
+		Vector2 fingerStartingPosition = Vector2.zero;
+		
+		if(touch.phase == TouchPhase.Began){
+			fingerStartingPosition = touch.position;
+		} else if(touch.phase == TouchPhase.Moved){
+			if(touch.deltaPosition.x > dpadSensitivity){
+				horizontalDirection = 1;
+			} else if(touch.deltaPosition.x < -dpadSensitivity){
+				horizontalDirection = -1;
+			}
+			if(touch.deltaPosition.y > dpadSensitivity){
+				verticalDirection = 1;
+			} else if(touch.deltaPosition.y < -dpadSensitivity){
+				verticalDirection = -1;
+			}
+		} else if(touch.phase == TouchPhase.Ended){
+			fingerStartingPosition = Vector2.zero;
+			horizontalDirection = 0;
+			verticalDirection = 0;
+		}
+	}
+	
+	private void PointerMove(){
+		float sensitivity = 3.5f;
+		Touch touch = Input.GetTouch(0);
+		
+		if(touch.phase == TouchPhase.Began){
+			if(touch.position.x > transform.position.x + sensitivity){
+				horizontalDirection = 1;
+			} else if(touch.position.x < transform.position.x - sensitivity){
+				horizontalDirection = -1;
+			}
+			if(touch.position.y > transform.position.y + sensitivity){
+				verticalDirection = 1;
+			} else if(touch.position.y < transform.position.y - sensitivity){
+				verticalDirection = -1;
+			}
+		} else if(touch.phase == TouchPhase.Ended){
+			horizontalDirection = 0;
+			verticalDirection = 0;
+		}
+		
+		// transform.eulerAngles = Vector3.RotateTowards(transform.up, Camera.main.ScreenToWorldPoint(touch.position),  step * Time.deltaTime, 0f);
+		// rigidbody.velocity = movementSpeed * transform.up;
 	}
 	
 	private void Move(){
@@ -90,6 +155,7 @@ public class Player : MonoBehaviour {
 		}
 	
 		rigidbody.velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
+		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime);
 	}
 	
 	private void PickUpKey(GameObject key){
@@ -126,8 +192,9 @@ public class Player : MonoBehaviour {
 	
 		Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.lossyScale.z * .5f);
 		if (Physics.Raycast(ray, transform.up, out hit)) {
-			if (Vector3.Distance(transform.position, hit.point) <= distance && (hit.transform.tag == "Wall" || hit.transform.tag == "Door" || hit.transform.tag == "Block")){		
-				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point) + .5f;
+			if (Vector3.Distance(transform.position, hit.point) <= distance && (hit.transform.tag == "Wall" || hit.transform.tag == "Door" || hit.transform.tag == "Door")){
+				Debug.Log(hit.transform.tag);
+				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point);
 				return true;
 			}
 		}

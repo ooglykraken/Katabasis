@@ -9,20 +9,21 @@ public class WallSwitch : MonoBehaviour {
 	public string argument;
 	
 	public void OnTriggerEnter(Collider c){
-		
+		if(c.transform.parent.tag == "Player"){
+			ActivateSwitch();
+		}
+	}
+	
+	private void ActivateSwitch(){
 		Transform handle = transform.Find("Handle").GetComponent<Transform>();
 		handle.eulerAngles	= new Vector3(transform.eulerAngles.x, 600f, transform.eulerAngles.z);
 		
-		// Debug.Log(handle.eulerAngles);
-		
-		if(c.transform.parent.tag == "Player"){
-			if (target) {
-				if (function.Length > 0) {
-					if (argument.Length > 0)
-						target.SendMessage(function, argument, SendMessageOptions.DontRequireReceiver);
-					else
-						target.SendMessage(function, SendMessageOptions.DontRequireReceiver);
-				}
+		if (target) {
+			if (function.Length > 0) {
+				if (argument.Length > 0)
+					target.SendMessage(function, argument, SendMessageOptions.DontRequireReceiver);
+				else
+					target.SendMessage(function, SendMessageOptions.DontRequireReceiver);
 			}
 		}
 	}

@@ -6,10 +6,15 @@ using System.Collections.Generic;
 
 public class XMLGenerator : MonoBehaviour {
 	
-	// List<string> xmlInformationXML = new Lis	t<string>();
+	public bool generateXML;
 	
 	public void Awake(){
-		string xmlInformation = "<level number=\"\">";
+		if(generateXML)
+			GenerateXML();
+	}
+	
+	private void GenerateXML(){
+		string xmlInformation = "<level number=\"\">\n";
 		
 		xmlInformation = string.Concat(xmlInformation, "<levelObjects>\n");
 		
@@ -17,7 +22,7 @@ public class XMLGenerator : MonoBehaviour {
 		xmlInformation = string.Concat(xmlInformation, "<object type=\"player\" x=\"" + player.transform.position.x +  "\" y=\"" + player.transform.position.y + "\" />\n");
 		
 		GameObject key = GameObject.Find("Key");
-		xmlInformation = string.Concat(xmlInformation, "<object type=\"key\" x=\"" + key.transform.position.x + "\" y=\"" + key.transform.position.y +  "\" />\n");
+		xmlInformation = string.Concat(xmlInformation, "<object type=\"key\" x=\"" + key.transform.position.x + "\" y=\"" + key.transform.position.y +  "\" z=\"" + key.transform.position.z +  "\"/>\n");
 		
 		GameObject stairs = GameObject.Find("Stairs");
 		xmlInformation = string.Concat(xmlInformation, "<object type=\"stairs\" x=\"" + stairs.transform.position.x + "\" y=\"" + stairs.transform.position.y + "\" />\n");
@@ -50,6 +55,10 @@ public class XMLGenerator : MonoBehaviour {
 			xmlInformation = string.Concat(xmlInformation, "<wall x=\"" + o.transform.position.x + "\" y=\"" + o.transform.position.y + "\" sizeX=\"" +  o.transform.lossyScale.x + "\" sizeY=\"" + o.transform.lossyScale.y + "\" />\n");
 		}
 		
+		foreach(GameObject o in GameObject.FindGameObjectsWithTag("IllusoryWall")){
+			xmlInformation = string.Concat(xmlInformation, "<illusoryWall x=\"" + o.transform.position.x + "\" y=\"" + o.transform.position.y + "\" sizeX=\"" +  o.transform.lossyScale.x + "\" sizeY=\"" + o.transform.lossyScale.y + "\" />\n");
+		}
+		
 			xmlInformation = string.Concat(xmlInformation, "</walls>\n");
 		
 		xmlInformation = string.Concat(xmlInformation, "<floors>\n");
@@ -69,3 +78,4 @@ public class XMLGenerator : MonoBehaviour {
 		Debug.Log(xmlInformation);
 	}
 }
+

@@ -12,9 +12,6 @@ public class FloorSwitch : MonoBehaviour {
 	public string upArgument;
 	
 	public void OnTriggerStay(Collider c){
-		
-		// Debug.Log(c.transform.parent.tag);
-		
 		transform.position = new Vector3(transform.position.x, transform.position.y, .5f);
 		
 		if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player"){
