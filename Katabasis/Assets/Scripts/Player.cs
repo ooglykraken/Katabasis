@@ -13,10 +13,12 @@ public class Player : MonoBehaviour {
 	
 	private bool hasFloorKey;
 	private bool isUsingPointer;
+	private bool isWalking;
 	
 	private Transform lanternTransform;
 	
 	private GameObject lantern;
+	private GameObject dpadCenter;
 	
 	public void Awake(){
 		hasFloorKey = false;
@@ -28,6 +30,9 @@ public class Player : MonoBehaviour {
 		startingLightIntensity = lantern.GetComponent<Light>().intensity;
 		
 		isUsingPointer = !Settings.Instance().isUsingDpad;
+		
+		dpadCenter = Instantiate(Resources.Load("UI/DpadCenter", typeof(GameObject)) as GameObject) as GameObject;
+		dpadCenter.GetComponent<Renderer>().enabled = false;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -51,12 +56,7 @@ public class Player : MonoBehaviour {
 		}
 	}
 	
-	public void FixedUpdate(){
-		#if UNITY_EDITOR
-			verticalDirection = (int)Input.GetAxisRaw("Vertical");
-			horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
-		#endif
-		
+	public void Update(){
 		#if UNITY_ANDROID
 			if(!isUsingPointer){
 				DPad();
@@ -64,12 +64,17 @@ public class Player : MonoBehaviour {
 				PointerMove();
 			}
 		#endif
+	}
+	
+	public void FixedUpdate(){
+		#if UNITY_EDITOR
+			verticalDirection = (int)Input.GetAxisRaw("Vertical");
+			horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
+		#endif
 		
 		string floorCast = CheckFloor();
 		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor"){
-			if(!isUsingPointer){
-				Move();
-			}
+			Move();
 		} else {
 			rigidbody.velocity = Vector3.zero;
 		}
@@ -86,28 +91,33 @@ public class Player : MonoBehaviour {
 	}
 	
 	private void DPad(){
-		float dpadSensitivity = 2.5f;
+		float dpadSensitivity = 2f;
 		
 		Touch touch = Input.GetTouch(0);
 		Vector2 fingerStartingPosition = Vector2.zero;
 		
 		if(touch.phase == TouchPhase.Began){
 			fingerStartingPosition = touch.position;
+			
+			dpadCenter.GetComponent<Renderer>().enabled = true;
+			dpadCenter.transform.position = Camera.main.ScreenToWorldPoint(fingerStartingPosition) + new Vector3(0f, 0f, -2f);
 		} else if(touch.phase == TouchPhase.Moved){
-			if(touch.deltaPosition.x > dpadSensitivity){
+			if(touch.deltaPosition.x + fingerStartingPosition.x > fingerStartingPosition.x + dpadSensitivity){
 				horizontalDirection = 1;
-			} else if(touch.deltaPosition.x < -dpadSensitivity){
+			} else if(touch.deltaPosition.x + fingerStartingPosition.x < fingerStartingPosition.x - dpadSensitivity){
 				horizontalDirection = -1;
 			}
-			if(touch.deltaPosition.y > dpadSensitivity){
+			if(touch.deltaPosition.y + fingerStartingPosition.x > fingerStartingPosition.x + dpadSensitivity){
 				verticalDirection = 1;
-			} else if(touch.deltaPosition.y < -dpadSensitivity){
+			} else if(touch.deltaPosition.y + fingerStartingPosition.x < fingerStartingPosition.x - dpadSensitivity){
 				verticalDirection = -1;
-			}
+			} 
 		} else if(touch.phase == TouchPhase.Ended){
 			fingerStartingPosition = Vector2.zero;
 			horizontalDirection = 0;
 			verticalDirection = 0;
+			
+			dpadCenter.GetComponent<Renderer>().enabled = false;
 		}
 	}
 	
@@ -115,15 +125,17 @@ public class Player : MonoBehaviour {
 		float sensitivity = 3.5f;
 		Touch touch = Input.GetTouch(0);
 		
+		Vector3 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 		if(touch.phase == TouchPhase.Began){
-			if(touch.position.x > transform.position.x + sensitivity){
+			// Debug.Log(touch.position.x + "   " + transform.position.x); 
+			if(touchPosition.x > transform.position.x + sensitivity){
 				horizontalDirection = 1;
-			} else if(touch.position.x < transform.position.x - sensitivity){
+			} else if(touchPosition.x < transform.position.x - sensitivity){
 				horizontalDirection = -1;
 			}
-			if(touch.position.y > transform.position.y + sensitivity){
+			if(touchPosition.y > transform.position.y + sensitivity){
 				verticalDirection = 1;
-			} else if(touch.position.y < transform.position.y - sensitivity){
+			} else if(touchPosition.y < transform.position.y - sensitivity){
 				verticalDirection = -1;
 			}
 		} else if(touch.phase == TouchPhase.Ended){
@@ -156,6 +168,16 @@ public class Player : MonoBehaviour {
 	
 		rigidbody.velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
 		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime);
+		
+		if(horizontalDirection == 0 && verticalDirection == 0){
+			gameObject.audio.Stop();
+			isWalking = false;
+		} else {
+			if(!isWalking){
+				gameObject.audio.Play();
+			}
+			isWalking = true;
+		}
 	}
 	
 	private void PickUpKey(GameObject key){
@@ -163,9 +185,6 @@ public class Player : MonoBehaviour {
 		hasFloorKey = true;
 		Destroy(key);
 		
-		// GameObject dialogBox = Instantiate(Resources.Load("DialogBox", typeof(GameObject)) as GameObject) as GameObject;
-		// dialogBox.transform.parent = transform;
-		// dialogBox.transform.position = Vector3.zero;
 	}
 	
 	private void Descend(){
@@ -193,7 +212,7 @@ public class Player : MonoBehaviour {
 		Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.lossyScale.z * .5f);
 		if (Physics.Raycast(ray, transform.up, out hit)) {
 			if (Vector3.Distance(transform.position, hit.point) <= distance && (hit.transform.tag == "Wall" || hit.transform.tag == "Door" || hit.transform.tag == "Door")){
-				Debug.Log(hit.transform.tag);
+				// Debug.Log(hit.transform.tag);
 				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point);
 				return true;
 			}
