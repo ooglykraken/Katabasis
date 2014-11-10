@@ -2,10 +2,25 @@
 using System.Collections;
 
 public class SmokeEnemy : MonoBehaviour {
+
+
+/*
+       Make Smoke Enemy stay instead of destroying itself after hitting player, so that it is more a piece of a puzzle.
+       Reorganize the collider and script for Smoke Enemy and Lantern Oil to be more like the player set up. 
+       Add Smoke Enemy to the floor switch.
+       Smoke Enemy is "on" the player when it hits the player, and clicking the player throws the Smoke Enemy off him.
+       Make Smoke Enemy wander to random locations while not in range of the player.
+       Make Smoke Enemy avoid objects.
+*/
+
+
+
 	
 	private Vector3 playerPosition;
 	private Vector3 enemyPosition;
+	private Vector3 startPosition;
 	public bool isHitByLight;
+	public bool thrownOff;
 	private float distanceToPlayer;
 	public float startEnemySpeed;
 	private float enemySpeed;
@@ -18,10 +33,12 @@ public class SmokeEnemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		startPosition = transform.position;
 		isHitByLight = false;
 		player = GameObject.Find ("Player");
 		enemySpeed = 1.25f;
 		stunTimer = 300f;
+		thrownOff = false;
 	}
 	
 	// Update is called once per frame
@@ -48,6 +65,13 @@ public class SmokeEnemy : MonoBehaviour {
 			isHitByLight = false;
 			enemySpeed = startEnemySpeed;
 		}
+		
+		if (thrownOff == true)
+		{
+			transform.parent = null;
+			Reappear ();
+			thrownOff = false;
+		}
 	}
 	
 	public void OnCollisionEnter(Collision c)
@@ -55,11 +79,20 @@ public class SmokeEnemy : MonoBehaviour {
 		if (c.transform.tag.Equals("Player"))
 		{
 			Debug.Log ("Hit Player. Now begin slow and smoke disperse animation.");
-			Destroy(gameObject);
+			GetComponentInChildren<MeshRenderer>().enabled = false;
+			GetComponentInChildren<Collider>().enabled = false;
+			transform.parent = player.transform;
 		}
 		else
 		{
 		}
 		
+	}
+	
+	private void Reappear()
+	{
+		transform.position = startPosition;
+		GetComponentInChildren<MeshRenderer>().enabled = true;
+		GetComponentInChildren<Collider>().enabled = true;
 	}
 }

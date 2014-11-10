@@ -17,7 +17,7 @@ public class FloorSwitch : MonoBehaviour {
 		
 		transform.position = new Vector3(transform.position.x, transform.position.y, .5f);
 		
-		if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player"){
+		if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
 			if (downTarget) {
 				if (downFunction.Length > 0) {
 					if (downArgument.Length > 0)
@@ -33,7 +33,7 @@ public class FloorSwitch : MonoBehaviour {
 		
 		transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
 		
-		if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player"){
+		if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
 			if (upTarget) {
 				if (upFunction.Length > 0) {
 					if (upArgument.Length > 0)

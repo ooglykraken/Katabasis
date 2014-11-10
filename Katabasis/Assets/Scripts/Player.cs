@@ -15,8 +15,6 @@ public class Player : MonoBehaviour {
 	
 	//Added for SmokeEnemy 
 	private bool isSlowed;
-	private float slowTimer;
-	private GameObject enemy;
 	
 	private Transform lanternTransform;
 	
@@ -27,7 +25,6 @@ public class Player : MonoBehaviour {
 		
 		//Added for SmokeEnemy slow effect
 		isSlowed = false;
-		slowTimer = 0f;
 		
 		lanternTransform = transform.Find("Lantern");
 		lantern = lanternTransform.gameObject;
@@ -36,10 +33,22 @@ public class Player : MonoBehaviour {
 		startingLightIntensity = lantern.GetComponent<Light>().intensity;
 	}
 	
-	// Click player to reduce the slow time
+	// Click player to throw the Smoke Enemy off.
 	public void OnMouseDown()
 	{
-		slowTimer -= 100f;
+		
+		foreach ( Transform child in transform)
+		{
+			 if (child.tag == "SmokeEnemy")
+			 {
+			 	Debug.Log ("clicked");
+			 	child.GetComponent<SmokeEnemy>().thrownOff = true;
+			 }
+			 else
+			 {
+			 }
+		}
+		isSlowed = false;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -62,11 +71,9 @@ public class Player : MonoBehaviour {
 			}
 		}
 		
-		// Start for the slow effect
-		if (c.transform.tag == "SmokeEnemy" )
+		if (c.transform.tag == "SmokeEnemy")
 		{
 			isSlowed = true;
-			slowTimer = 250f;
 		}
 	}
 	
@@ -88,9 +95,7 @@ public class Player : MonoBehaviour {
 		}
 		
 		//Check the SmokeEnemy related stuff
-		if (isSlowed == true)
-			Slowed();
-			
+		Slowed();	
 		CheckForSmokeEnemy();
 		
 	}
@@ -123,8 +128,7 @@ public class Player : MonoBehaviour {
 	
 	private void Slowed()
 	{
-		if (slowTimer > 0f){
-			slowTimer--;
+		if (isSlowed == true){
 			movementSpeed = 2.5f;
 			lightLostPerFrame = .003f;
 		}else{
@@ -204,6 +208,9 @@ public class Player : MonoBehaviour {
 			if ((hit.transform.tag == "SmokeEnemy"))
 			{
 				hit.transform.GetComponent<SmokeEnemy>().isHitByLight = true;
+			}
+			else
+			{
 			}
 		}
 		
