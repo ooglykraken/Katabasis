@@ -11,6 +11,7 @@ public class WallSwitch : MonoBehaviour {
 	public void OnTriggerEnter(Collider c){
 		if(c.transform.parent.tag == "Player"){
 			ActivateSwitch();
+			TextBox.Instance().UpdateText("You hear a click nearby...");
 		}
 	}
 	

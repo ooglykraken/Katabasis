@@ -88,7 +88,8 @@ public class Level : MonoBehaviour {
 		
 		GameObject stairs = Instantiate(Resources.Load("Stairs", typeof(GameObject)) as GameObject) as GameObject;
 		stairs.transform.position = new Vector3(float.Parse(stairsXML.GetValue("@x")), float.Parse(stairsXML.GetValue("@y")), .4f);
-	
+		stairs.transform.eulerAngles = new Vector3(0f, 0f, float.Parse(stairsXML.GetValue("@z")));
+		
 		player.transform.position = new Vector3(float.Parse(playerXML.GetValue("@x")),float.Parse(playerXML.GetValue("@y")), 0f);
 		
 		player.transform.parent = gameplay.transform;

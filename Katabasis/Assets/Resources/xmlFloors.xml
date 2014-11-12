@@ -5,8 +5,8 @@
 		<level number="0">
 			<levelObjects>
 				<object type="player" x="0" y="8" />
-				<object type="key" x="-11" y="1" z="0" />
-				<object type="stairs" x="0" y="-9" />
+				<object type="key" x="-11" y="1" z=".5" />
+				<object type="stairs" x="0" y="-9" z="0"/>
 				<object type="block" x="-8" y="1" sizeX="1" sizeY="1" />
 				<object type="wallSwitch"  x="4.75" y="4" sizeX="0.5" sizeY="0.5" rotationZ="180" />
 				<object type="floorSwitch"  x="0" y="0" sizeX="1" sizeY="1" />
@@ -32,7 +32,7 @@
 			<levelObjects>
 				<object type="player" x="0" y="-5" />
 				<object type="key" x="-7" y="-3" z ="-3"/>
-				<object type="stairs" x="0" y="7.5" />
+				<object type="stairs" x="0" y="7.5" z="180"/>
 				<object type="block" x="7" y="-5" sizeX="1" sizeY="1" />
 				<object type="fan" x="-6.9661" y="-9.6734" sizeX="2" sizeY="0.3" />
 				<object type="wallSwitch"  x="-8.5" y="1" sizeX="0.5" sizeY="0.5" rotationZ="0" />
@@ -59,8 +59,8 @@
 		<level number="2">
 			<levelObjects>
 				<object type="player" x="0" y="-12" />
-				<object type="key" x="15" y="1" z="0"/>
-				<object type="stairs" x="9" y="-11" />
+				<object type="key" x="15" y="1" z=".5"/>
+				<object type="stairs" x="9" y="-11" z="0"/>
 				<object type="block" x="-5.5" y="-4.5" sizeX="1" sizeY="1" />
 				<object type="wallSwitch"  x="-6" y="5.25" sizeX="0.5000001" sizeY="0.5000001" rotationZ="270" />
 				<object type="floorSwitch"  x="0" y="0" sizeX="1" sizeY="1" />

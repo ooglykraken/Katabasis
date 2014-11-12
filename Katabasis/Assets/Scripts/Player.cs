@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	private float movementSpeed = 2.5f;
+	public float movementSpeed;
 	public float lightLostPerFrame = .001f;
 	private float startingLightIntensity;
 	private float startingLightRange;
@@ -11,9 +11,10 @@ public class Player : MonoBehaviour {
 	private int verticalDirection;
 	private int horizontalDirection;
 	
-	private bool hasFloorKey;
+	public bool hasFloorKey;
 	private bool isUsingPointer;
-	private bool isWalking;
+	public bool isWalking;
+	private bool isDoorOpen;
 	
 	private Transform lanternTransform;
 	
@@ -42,8 +43,12 @@ public class Player : MonoBehaviour {
 			if(c.transform.parent.tag == "Key"){
 				PickUpKey(c.transform.parent.gameObject);
 			} else if(c.transform.parent.tag == "StairsDown"){
+				// if(isDoorOpen){
+					// Descend();
+				// }else
 				if(hasFloorKey){
 					Descend();
+					// OpenDoorDown();
 				} else {
 					//He doesnt have the key yet
 				}
@@ -67,7 +72,7 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void FixedUpdate(){
-		#if UNITY_EDITOR
+		#if UNITY_EDITOR || UNITY_STANDALONE_WIN
 			verticalDirection = (int)Input.GetAxisRaw("Vertical");
 			horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 		#endif
@@ -185,16 +190,26 @@ public class Player : MonoBehaviour {
 		hasFloorKey = true;
 		Destroy(key);
 		
+		
+		TextBox.Instance().UpdateText("You picked up a key....");
 	}
+	
+	// private void OpenDoorDown(){
+		// isDoorOpen = true;
+		
+		// Stairs.Instance().OpenDoors();
+	// }
 	
 	private void Descend(){
 		if(Gameplay.Instance().currentLevel <= Gameplay.Instance().finalLevel){
+			
 			Gameplay.Instance().NextLevel();
 			lantern.GetComponent<Light>().intensity = startingLightIntensity;
 		} else {
 			//Finish();
 		}
 		
+		isDoorOpen = false;
 		hasFloorKey = false;
 	}
 	
@@ -206,12 +221,16 @@ public class Player : MonoBehaviour {
 	
 	private bool CheckForWalls(){
 		
+		
+		int layerMask = (int)(1<<9);
+		layerMask = ~layerMask;
+	
 		float distance = startingLightRange;
 		RaycastHit hit;
 	
 		Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.lossyScale.z * .5f);
 		if (Physics.Raycast(ray, transform.up, out hit)) {
-			if (Vector3.Distance(transform.position, hit.point) <= distance && (hit.transform.tag == "Wall" || hit.transform.tag == "Door" || hit.transform.tag == "Door")){
+			if (Vector3.Distance(transform.position, hit.point) <= distance && (hit.transform.tag == "Wall" || hit.transform.tag == "Door")){
 				// Debug.Log(hit.transform.tag);
 				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point);
 				return true;
