@@ -68,7 +68,7 @@ public class SmokeEnemy : MonoBehaviour {
 		
 		if (thrownOff == true)
 		{
-			transform.parent = null;
+			transform.parent = player.transform.parent;
 			Reappear ();
 			thrownOff = false;
 		}

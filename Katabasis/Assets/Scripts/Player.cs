@@ -71,8 +71,9 @@ public class Player : MonoBehaviour {
 			}
 		}
 		
-		if (c.transform.tag == "SmokeEnemy")
+		if (c.transform.tag.Equals ("SmokeEnemy"))
 		{
+			Debug.Log ("Hit by Smoke");
 			isSlowed = true;
 		}
 	}
