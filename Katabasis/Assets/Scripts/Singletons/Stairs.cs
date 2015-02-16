@@ -17,7 +17,12 @@ public class Stairs : MonoBehaviour {
 	
 	public void OpenDoors(){
 		Debug.Log("OPEN");
+		
+		audio.Play();
+		
 		transform.Find("Model").gameObject.GetComponent<Renderer>().material = stairsMaterial;
+		
+		transform.localScale = new Vector3(3.5f, 2f, 1f);
 		
 		gameObject.GetComponent<Collider>().enabled = false;
 	}

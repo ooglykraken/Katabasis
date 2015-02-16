@@ -12,28 +12,45 @@ public class Player : MonoBehaviour {
 	private int horizontalDirection;
 	
 	public bool hasFloorKey;
-	private bool isUsingPointer;
 	public bool isWalking;
 	private bool isDoorOpen;
+	
+	//Added for SmokeEnemy 
+	private bool isSlowed;
 	
 	private Transform lanternTransform;
 	
 	private GameObject lantern;
-	private GameObject dpadCenter;
 	
 	public void Awake(){
 		hasFloorKey = false;
+		
+		//Added for SmokeEnemy slow effect
+		isSlowed = false;
 		
 		lanternTransform = transform.Find("Lantern");
 		lantern = lanternTransform.gameObject;
 		
 		startingLightRange = lantern.GetComponent<Light>().range;
 		startingLightIntensity = lantern.GetComponent<Light>().intensity;
+	}
+	
+	// Click player to throw the Smoke Enemy off.
+	public void OnMouseDown()
+	{
 		
-		isUsingPointer = !Settings.Instance().isUsingDpad;
-		
-		dpadCenter = Instantiate(Resources.Load("UI/DpadCenter", typeof(GameObject)) as GameObject) as GameObject;
-		dpadCenter.GetComponent<Renderer>().enabled = false;
+		foreach ( Transform child in transform)
+		{
+			 if (child.tag == "SmokeEnemy")
+			 {
+			 	Debug.Log ("clicked");
+			 	child.GetComponent<SmokeEnemy>().thrownOff = true;
+			 }
+			 else
+			 {
+			 }
+		}
+		isSlowed = false;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -59,20 +76,16 @@ public class Player : MonoBehaviour {
 			} else {
 			}
 		}
-	}
-	
-	public void Update(){
-		#if UNITY_ANDROID
-			if(!isUsingPointer){
-				DPad();
-			} else {
-				PointerMove();
-			}
-		#endif
+		
+		if (c.transform.tag.Equals ("SmokeEnemy"))
+		{
+			Debug.Log ("Hit by Smoke");
+			isSlowed = true;
+		}
 	}
 	
 	public void FixedUpdate(){
-		#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+		#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_MAC
 			verticalDirection = (int)Input.GetAxisRaw("Vertical");
 			horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 		#endif
@@ -84,72 +97,20 @@ public class Player : MonoBehaviour {
 			rigidbody.velocity = Vector3.zero;
 		}
 		
-		LoseLight();
+		// LoseLight();
 		
 		if(!CheckForWalls() ){
 			lantern.GetComponent<Light>().range = startingLightRange;
 		}
+		
+		//Check the SmokeEnemy related stuff
+		Slowed();	
+		CheckForSmokeEnemy();
+		
 	}
 	
 	public void LateUpdate(){
 		CameraFollow();
-	}
-	
-	private void DPad(){
-		float dpadSensitivity = 2f;
-		
-		Touch touch = Input.GetTouch(0);
-		Vector2 fingerStartingPosition = Vector2.zero;
-		
-		if(touch.phase == TouchPhase.Began){
-			fingerStartingPosition = touch.position;
-			
-			dpadCenter.GetComponent<Renderer>().enabled = true;
-			dpadCenter.transform.position = Camera.main.ScreenToWorldPoint(fingerStartingPosition) + new Vector3(0f, 0f, -2f);
-		} else if(touch.phase == TouchPhase.Moved){
-			if(touch.deltaPosition.x + fingerStartingPosition.x > fingerStartingPosition.x + dpadSensitivity){
-				horizontalDirection = 1;
-			} else if(touch.deltaPosition.x + fingerStartingPosition.x < fingerStartingPosition.x - dpadSensitivity){
-				horizontalDirection = -1;
-			}
-			if(touch.deltaPosition.y + fingerStartingPosition.x > fingerStartingPosition.x + dpadSensitivity){
-				verticalDirection = 1;
-			} else if(touch.deltaPosition.y + fingerStartingPosition.x < fingerStartingPosition.x - dpadSensitivity){
-				verticalDirection = -1;
-			} 
-		} else if(touch.phase == TouchPhase.Ended){
-			fingerStartingPosition = Vector2.zero;
-			horizontalDirection = 0;
-			verticalDirection = 0;
-			
-			dpadCenter.GetComponent<Renderer>().enabled = false;
-		}
-	}
-	
-	private void PointerMove(){
-		float sensitivity = 3.5f;
-		Touch touch = Input.GetTouch(0);
-		
-		Vector3 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-		if(touch.phase == TouchPhase.Began){
-			// Debug.Log(touch.position.x + "   " + transform.position.x); 
-			if(touchPosition.x > transform.position.x + sensitivity){
-				horizontalDirection = 1;
-			} else if(touchPosition.x < transform.position.x - sensitivity){
-				horizontalDirection = -1;
-			}
-			if(touchPosition.y > transform.position.y + sensitivity){
-				verticalDirection = 1;
-			} else if(touchPosition.y < transform.position.y - sensitivity){
-				verticalDirection = -1;
-			}
-		} else if(touch.phase == TouchPhase.Ended){
-			horizontalDirection = 0;
-			verticalDirection = 0;
-		}
-		
-		// transform.eulerAngles = Vector3.RotateTowards(transform.up, Camera.main.ScreenToWorldPoint(touch.position),  step * Time.deltaTime, 0f);
-		// rigidbody.velocity = movementSpeed * transform.up;
 	}
 	
 	private void Move(){
@@ -185,6 +146,18 @@ public class Player : MonoBehaviour {
 		}
 	}
 	
+	private void Slowed()
+	{
+		if (isSlowed == true){
+			movementSpeed = 2.5f;
+			lightLostPerFrame = .003f;
+		}else{
+			movementSpeed = 5f;
+			isSlowed = false;
+			lightLostPerFrame = .001f;
+		}
+	}
+	
 	private void PickUpKey(GameObject key){
 			
 		hasFloorKey = true;
@@ -201,22 +174,11 @@ public class Player : MonoBehaviour {
 	// }
 	
 	private void Descend(){
-		if(Gameplay.Instance().currentLevel <= Gameplay.Instance().finalLevel){
-			
-			Gameplay.Instance().NextLevel();
-			lantern.GetComponent<Light>().intensity = startingLightIntensity;
-		} else {
-			//Finish();
-		}
+		
+		// Handle jumping to the next stage.
 		
 		isDoorOpen = false;
 		hasFloorKey = false;
-	}
-	
-	private void LoseLight(){
-		
-		lantern.GetComponent<Light>().intensity -= lightLostPerFrame;
-		lantern.GetComponent<Light>().spotAngle = lantern.GetComponent<Light>().intensity * 10f;
 	}
 	
 	private bool CheckForWalls(){
@@ -232,9 +194,10 @@ public class Player : MonoBehaviour {
 		if (Physics.Raycast(ray, transform.up, out hit)) {
 			if (Vector3.Distance(transform.position, hit.point) <= distance && (hit.transform.tag == "Wall" || hit.transform.tag == "Door")){
 				// Debug.Log(hit.transform.tag);
-				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point);
+				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point) + 2f;
 				return true;
 			}
+
 		}
 		
 		return false;
@@ -254,12 +217,32 @@ public class Player : MonoBehaviour {
 		return "";
 	}
 	
-	private void Death(){
+	private void CheckForSmokeEnemy()
+	{
+		//Added this for the stunning of SmokeEnemy 
+		RaycastHit hit;
+		
+		Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.position.z );
+		
+		if (Physics.Raycast(ray, transform.up, out hit, 5f)) 
+		{
+			if ((hit.transform.tag == "SmokeEnemy"))
+			{
+				hit.transform.GetComponent<SmokeEnemy>().isHitByLight = true;
+			}
+			else
+			{
+			}
+		}
 		
 	}
 	
+	private void Death(){
+		// Reset the player to "spawn point" or entrance to room
+	}
+	
 	private void Finish(){
-		
+		// End state of game
 	}
 	
 	private void Turn(string direction){
@@ -313,6 +296,21 @@ public class Player : MonoBehaviour {
 			main.transform.position = new Vector3(main.transform.position.x, transform.position.y + cameraOffset, main.transform.position.z);
 		}
 	}
+	
+	public void GetFirstLight(){
+		transform.Find("Lantern").GetComponent<Light>().enabled = true;
+		GameObject.Find("LanternPickup").GetComponent<Light>().enabled = false;
+	}
+	
+	public void ChangeLights(int light){
+		// Handle switching between lights
+	
+	}
+	
+	public void SpotLantern(){
+		TextBox.Instance().UpdateText("There is a lantern on the floor.");
+	}
+	
 	
 	// private static Player instance = null;
 	

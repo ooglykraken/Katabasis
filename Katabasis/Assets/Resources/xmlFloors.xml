@@ -10,18 +10,18 @@
 				<object type="block" x="-8" y="1" sizeX="1" sizeY="1" />
 				<object type="wallSwitch"  x="4.75" y="4" sizeX="0.5" sizeY="0.5" rotationZ="180" />
 				<object type="floorSwitch"  x="0" y="0" sizeX="1" sizeY="1" />
-				<object type="door" x="0" y="-3.5" sizeX="10" sizeY="1" />
-				<object type="door" x="-5.5" y="1" sizeX="1" sizeY="8" />
+				<object type="door" x="0" y="-3.5" sizeX="10" sizeY=".3" orientation="horizontal"/>
+				<object type="door" x="-5.5" y="1" sizeX="8" sizeY=".3" orientation="vertical"/>
 			</levelObjects>
 			<walls>
-				<wall x="0" y="10.5" sizeX="12" sizeY="1" />
-				<wall x="-5.5" y="7.5" sizeX="1" sizeY="5" />
-				<wall x="5.5" y="0" sizeX="1" sizeY="20" />
-				<wall x="-13.5" y="1" sizeX="1" sizeY="8" />
-				<wall x="0" y="-10.5" sizeX="12" sizeY="1" />
-				<wall x="-10" y="-3.5" sizeX="8" sizeY="1" />
-				<wall x="-10" y="5.5" sizeX="8" sizeY="1" />
-				<wall x="-5.5" y="-6.5" sizeX="1" sizeY="7" />
+				<wall x="0" y="10.5" sizeX="12" sizeY="1" orientation="horizontal"/>
+				<wall x="-5.5" y="7.5" sizeX="5" sizeY="1" orientation="vertical" />
+				<wall x="5.5" y="0" sizeX="20" sizeY="1" orientation="vertical" />
+				<wall x="-13.5" y="1" sizeX="8" sizeY="1" orientation="vertical" />
+				<wall x="0" y="-10.5" sizeX="12" sizeY="1" orientation="horizontal"/>
+				<wall x="-10" y="-3.5" sizeX="8" sizeY="1" orientation="horizontal"/>
+				<wall x="-10" y="5.5" sizeX="8" sizeY="1" orientation="horizontal"/>
+				<wall x="-5.5" y="-6.5" sizeX="7" sizeY="1" orientation="vertical"/>
 			</walls>
 			<floors>
 				<floor x="0" y="0" sizeX="10" sizeY="20" />
@@ -37,10 +37,10 @@
 				<object type="fan" x="-6.9661" y="-9.6734" sizeX="2" sizeY="0.3" />
 				<object type="wallSwitch"  x="-8.5" y="1" sizeX="0.5" sizeY="0.5" rotationZ="0" />
 				<object type="floorSwitch"  x="7" y="0" sizeX="1" sizeY="1" />
-				<object type="door" x="0" y="5" sizeX="2" sizeY="1" />
+				<object type="door" x="0" y="5" sizeX="2" sizeY=".3" orientation="horizontal"/>
 			</levelObjects>
 			<walls>
-				<wall x="-9" y="0" sizeX="1" sizeY="3" />	
+				<wall x="-9" y="0" sizeX="3" sizeY="1"  orientation="vertical"/>	
 			</walls>
 			<floors>
 				<floor x="0" y="1" sizeX="5" sizeY="5" />
@@ -64,26 +64,26 @@
 				<object type="block" x="-5.5" y="-4.5" sizeX="1" sizeY="1" />
 				<object type="wallSwitch"  x="-6" y="5.25" sizeX="0.5000001" sizeY="0.5000001" rotationZ="270" />
 				<object type="floorSwitch"  x="0" y="0" sizeX="1" sizeY="1" />
-				<object type="door" x="-4" y="3" sizeX="1" sizeY="5" />
+				<object type="door" x="-4" y="3" sizeX="5" sizeY=".3" orientation="vertical"/>
 			</levelObjects>
 			<walls>
-				<wall x="11.5" y="5.5" sizeX="1" sizeY="4" />
-				<wall x="5.5" y="-4" sizeX="1" sizeY="17" />
-				<wall x="-3" y="7" sizeX="1" sizeY="3" />
-				<wall x="-6" y="-7" sizeX="5" sizeY="1" />
-				<wall x="11.5" y="-7.5" sizeX="1" sizeY="10" />
-				<wall x="-3" y="-10" sizeX="1" sizeY="7" />
-				<wall x="14.5" y="-3" sizeX="5" sizeY="1" />
-				<wall x="9" y="8" sizeX="6" sizeY="1" />
-				<wall x="0" y="8" sizeX="5" sizeY="1" />
-				<wall x="3" y="-4" sizeX="1" sizeY="17" />
-				<wall x="14" y="3" sizeX="6" sizeY="1" />
-				<wall x="-5" y="-0.5" sizeX="5" sizeY="2" />
-				<wall x="0.5" y="-13" sizeX="6" sizeY="1" />
-				<wall x="-8" y="-0.5" sizeX="1" sizeY="12" />
-				<wall x="-6" y="6" sizeX="5" sizeY="1" />
-				<wall x="16.5" y="0" sizeX="1" sizeY="5" />
-				<wall x="8.5" y="-13" sizeX="7" sizeY="1" />
+				<wall x="11.5" y="5.5" sizeX="4" sizeY="1"  orientation="vertical"/>
+				<wall x="5.5" y="-4" sizeX="17" sizeY="1"  orientation="vertical"/>
+				<wall x="-3" y="7" sizeX="3" sizeY="1"  orientation="vertical"/>
+				<wall x="-6" y="-7" sizeX="5" sizeY="1" orientation="horizontal"/>
+				<wall x="11.5" y="-7.5" sizeX="10" sizeY="1"  orientation="vertical"/>
+				<wall x="-3" y="-10" sizeX="7" sizeY="1"  orientation="vertical"/>
+				<wall x="14.5" y="-3" sizeX="5" sizeY="1" orientation="horizontal"/>
+				<wall x="9" y="8" sizeX="6" sizeY="1" orientation="horizontal"/>
+				<wall x="0" y="8" sizeX="5" sizeY="1" orientation="horizontal"/>
+				<wall x="3" y="-4" sizeX="17" sizeY="1" orientation="vertical"/>
+				<wall x="14" y="3" sizeX="6" sizeY="1" orientation="horizontal"/>
+				<wall x="-5" y="-0.5" sizeX="5" sizeY="2" orientation="horizontal"/>
+				<wall x="0.5" y="-13" sizeX="6" sizeY="1" orientation="horizontal"/>
+				<wall x="-8" y="-0.5" sizeX="12" sizeY="1" orientation="vertical" />
+				<wall x="-6" y="6" sizeX="5" sizeY="1" orientation="horizontal"/>
+				<wall x="16.5" y="0" sizeX="5" sizeY="1" orientation="vertical"/>
+				<wall x="8.5" y="-13" sizeX="7" sizeY="1" orientation="horizontal"/>
 				<illusoryWall x="-3" y="-4" sizeX="1" sizeY="5" />
 				<illusoryWall x="11.5" y="0" sizeX="1" sizeY="5" />
 				<illusoryWall x="-3" y="3" sizeX="1" sizeY="5" />
