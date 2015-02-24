@@ -11,46 +11,40 @@ public class Player : MonoBehaviour {
 	private int verticalDirection;
 	private int horizontalDirection;
 	
+	
 	public bool hasFloorKey;
 	public bool isWalking;
 	private bool isDoorOpen;
 	
 	//Added for SmokeEnemy 
 	private bool isSlowed;
-	
+	private Transform lensTransform;
 	private Transform lanternTransform;
 	
+	public GameObject activeLight;
 	private GameObject lantern;
+	private GameObject lens;
+	public bool hasLens;
+	
+	public Transform teleportLocation;
 	
 	public void Awake(){
 		hasFloorKey = false;
+		hasLens = false;
 		
 		//Added for SmokeEnemy slow effect
 		isSlowed = false;
 		
+		lensTransform = transform.Find ("Lens");
+		lens = lensTransform.gameObject;
+		
 		lanternTransform = transform.Find("Lantern");
 		lantern = lanternTransform.gameObject;
 		
+		activeLight = lantern;
+		
 		startingLightRange = lantern.GetComponent<Light>().range;
 		startingLightIntensity = lantern.GetComponent<Light>().intensity;
-	}
-	
-	// Click player to throw the Smoke Enemy off.
-	public void OnMouseDown()
-	{
-		
-		foreach ( Transform child in transform)
-		{
-			 if (child.tag == "SmokeEnemy")
-			 {
-			 	Debug.Log ("clicked");
-			 	child.GetComponent<SmokeEnemy>().thrownOff = true;
-			 }
-			 else
-			 {
-			 }
-		}
-		isSlowed = false;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -77,11 +71,21 @@ public class Player : MonoBehaviour {
 			}
 		}
 		
-		if (c.transform.tag.Equals ("SmokeEnemy"))
+	}
+	
+	public void OnCollisionStay(Collision c)
+	{
+		if (c.transform.name.Equals ("PurpleLightFloor"))
 		{
-			Debug.Log ("Hit by Smoke");
-			isSlowed = true;
+			gameObject.transform.SetParent(c.transform);
+			
 		}
+		
+	}
+	
+	public void OnCollisionExit(Collision c)
+	{
+		gameObject.transform.SetParent(null);
 	}
 	
 	public void FixedUpdate(){
@@ -101,6 +105,20 @@ public class Player : MonoBehaviour {
 		
 		if(!CheckForWalls() ){
 			lantern.GetComponent<Light>().range = startingLightRange;
+		}
+		
+		if (Input.GetKeyDown ("1"))
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = lantern;
+			activeLight.gameObject.SetActive (true);
+		}
+		
+		if (Input.GetKeyDown ("2") && hasLens == true)
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = lens;
+			activeLight.gameObject.SetActive (true);
 		}
 		
 		//Check the SmokeEnemy related stuff
@@ -311,6 +329,10 @@ public class Player : MonoBehaviour {
 		TextBox.Instance().UpdateText("There is a lantern on the floor.");
 	}
 	
+	public void Teleport()
+	{
+		transform.position = teleportLocation.position;
+	}
 	
 	// private static Player instance = null;
 	
