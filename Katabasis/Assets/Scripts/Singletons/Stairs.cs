@@ -7,9 +7,12 @@ public class Stairs : MonoBehaviour {
 	
 	public Material doorMaterial;
 	
+	public bool isOpen = false;
+	
 	public void OnTriggerEnter(Collider c){
 		if(GameObject.Find("Player").GetComponent<Player>().hasFloorKey){
 			OpenDoors();
+			isOpen = true;
 		} else {
 			TextBox.Instance().UpdateText("You need a key...");
 		}
@@ -20,9 +23,13 @@ public class Stairs : MonoBehaviour {
 		
 		audio.Play();
 		
-		transform.Find("Model").gameObject.GetComponent<Renderer>().material = stairsMaterial;
 		
-		transform.localScale = new Vector3(3.5f, 2f, 1f);
+		transform.Find("SpriteOpen").gameObject.SetActive(true);
+		
+		transform.Find("SpriteClosed").gameObject.SetActive(false);
+		// transform.Find("Model").gameObject.GetComponent<Renderer>().material = stairsMaterial;
+		
+		// transform.localScale = new Vector3(3.5f, 2f, 1f);
 		
 		gameObject.GetComponent<Collider>().enabled = false;
 	}

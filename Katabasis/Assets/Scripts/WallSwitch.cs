@@ -10,10 +10,16 @@ public class WallSwitch : MonoBehaviour {
 	
 	bool isFlipped;
 	
+	// each switch should get one piece (a floor prefab) and turns the mesh renderer on.
+	public GameObject bridgePiece;
+	
 	public void OnTriggerEnter(Collider c){
-		if(c.transform.parent.tag == "Player"){
-			ActivateSwitch();
-			// TextBox.Instance().UpdateText("You hear a click nearby...");
+		if (c.name != "Lens")
+		{
+			if(c.transform.parent.tag == "Player"){
+				ActivateSwitch();
+				// TextBox.Instance().UpdateText("You hear a click nearby...");
+			}
 		}
 	}
 	
@@ -36,6 +42,12 @@ public class WallSwitch : MonoBehaviour {
 				else
 					target.SendMessage(function, SendMessageOptions.DontRequireReceiver);
 			}
+		}
+		
+		if (bridgePiece != null)
+		{
+			Debug.Log("Floor is active now!");
+			bridgePiece.SetActive (true);
 		}
 	}
 	

@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour {
 	}
 	
 	private void StartGame(){
-		Application.LoadLevel("Gameplay");
+		Application.LoadLevel("Tutorial");
 	}
 	
 	private void Settings(){

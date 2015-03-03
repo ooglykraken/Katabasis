@@ -3,22 +3,41 @@ using System.Collections;
 
 public class Popup : MonoBehaviour {
 
-	private void SetPlayStyle(string s){
-		Debug.Log(s);
-		
-		if(s == "Pointer"){
-			Settings.Instance().isUsingDpad = false;
-		} else if(s == "D-Pad"){
-			Settings.Instance().isUsingDpad = true;
+	public void Start(){
+		transform.parent = Camera.main.transform;
+			
+		transform.localPosition = new Vector3(0f, 0f, 3f);
+	}
+	
+	public void Update(){
+	
+		if(Input.GetKeyDown("escape") || PlayerClicksOutOfBounds()){
+			Close();
 		}
+	}
+	
+	private void Close(){
+		Debug.Log("Popup being closed");
+		Gameplay.Instance().popupOpen = false;
+		Destroy(gameObject);
+	}
+	
+	private bool PlayerClicksOutOfBounds(){
+		Vector3 mouseInput = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		mouseInput = new Vector3(mouseInput.x, mouseInput.y, transform.position.z);
+		Bounds colliderBounds = gameObject.GetComponent<Collider>().bounds;
 		
-		foreach(GameObject g in GameObject.FindGameObjectsWithTag("UIText")){
-			if(g.transform.parent.parent.name != "Popup(Clone)"){
-				
-				g.GetComponent<Renderer>().enabled = true;
+		bool outOfBounds = false;
+		if(Input.GetMouseButtonDown(0)){
+			// if(mouseInput.x > colliderBounds.max.x || mouseInput.x < colliderBounds.min.x || mouseInput.y > colliderBounds.max.y || mouseInput.y < colliderBounds.min.y){
+				// outOfBounds = true;
+			// }
+			
+			if(!colliderBounds.Contains(mouseInput)){
+				outOfBounds = true;
 			}
 		}
 		
-		Destroy(gameObject);
+		return outOfBounds;
 	}
 }

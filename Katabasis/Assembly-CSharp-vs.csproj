@@ -47,6 +47,14 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoyWalkingAnimation.cs" />
+     <Compile Include="Assets\Scripts\Denial\MovingPlatformCircle.cs" />
+     <Compile Include="Assets\Scripts\Denial\MultiFloorSwitch.cs" />
+     <Compile Include="Assets\Scripts\Denial\PurpleLight.cs" />
+     <Compile Include="Assets\Scripts\Denial\PurpleLightBlock.cs" />
+     <Compile Include="Assets\Scripts\Denial\PurpleLightFakeBlock.cs" />
+     <Compile Include="Assets\Scripts\Denial\PurpleLightGiver.cs" />
+     <Compile Include="Assets\Scripts\Denial\PurpleLightWall.cs" />
+     <Compile Include="Assets\Scripts\Denial\TimedSwitchAndLight.cs" />
      <Compile Include="Assets\Scripts\Door.cs" />
      <Compile Include="Assets\Scripts\Fan.cs" />
      <Compile Include="Assets\Scripts\FloorSwitch.cs" />
@@ -66,10 +74,12 @@
      <Compile Include="Assets\Scripts\UI\MainMenu.cs" />
      <Compile Include="Assets\Scripts\UI\Popup.cs" />
      <Compile Include="Assets\Scripts\UI\PopupButton.cs" />
+     <Compile Include="Assets\Scripts\UI\Slider.cs" />
      <Compile Include="Assets\Scripts\WallSwitch.cs" />
      <None Include="Assets\Shaders\Tiles.shader" />
      <None Include="Assets\Resources\xmlFloors.xml" />
      <None Include="Assets\Shaders\Sprites-Diffuse-Custom.shader" />
+     <None Include="Assets\Shaders\UnlitAlpha.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/My Apps/Unity/NewVersion/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>
