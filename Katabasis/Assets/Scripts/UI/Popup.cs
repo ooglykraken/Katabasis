@@ -19,6 +19,7 @@ public class Popup : MonoBehaviour {
 	private void Close(){
 		Debug.Log("Popup being closed");
 		Gameplay.Instance().popupOpen = false;
+		transform.Find("Slider").GetComponent<Slider>().AdjustValue();
 		Destroy(gameObject);
 	}
 	

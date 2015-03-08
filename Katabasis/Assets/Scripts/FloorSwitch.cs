@@ -23,11 +23,11 @@ public class FloorSwitch : MonoBehaviour {
 			
 			transform.Find("Plate").localPosition = new Vector3(transform.Find("Plate").localPosition.x, transform.Find("Plate").localPosition.y, -.01f);
 			
-			if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
+			if((c.transform.parent.tag == "Box" && c.transform.name != "Box-Fake") || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
 				
 				active = true;
 				
-				audio.Play();
+				GetComponent<AudioSource>().Play();
 				
 				if (downTarget) {
 					if (downFunction.Length > 0) {
@@ -49,7 +49,7 @@ public class FloorSwitch : MonoBehaviour {
 		{
 			transform.Find("Plate").localPosition = new Vector3(transform.Find("Plate").localPosition.x, transform.Find("Plate").localPosition.y, -1f);
 			
-			if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
+			if((c.transform.parent.tag == "Box" && c.transform.name != "Box-Fake") || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
 				if (upTarget) {
 					if (upFunction.Length > 0) {
 						if (upArgument.Length > 0)

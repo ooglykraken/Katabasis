@@ -15,8 +15,8 @@ public class MovableBlock : MonoBehaviour {
 			ReturnToPlayer();
 		}
 	
-		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime * 6f);
-		rigidbody.velocity += new Vector3(0f, 0f, .8f);
+		GetComponent<Rigidbody>().velocity = Vector3.Lerp(GetComponent<Rigidbody>().velocity, Vector3.zero, Time.deltaTime * 6f);
+		GetComponent<Rigidbody>().velocity += new Vector3(0f, 0f, .8f);
 	}
 	
 	public void ReturnToPlayer(){

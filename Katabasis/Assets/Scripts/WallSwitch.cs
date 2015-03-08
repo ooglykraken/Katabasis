@@ -28,7 +28,7 @@ public class WallSwitch : MonoBehaviour {
 			return;
 		}
 		
-		audio.Play();
+		GetComponent<AudioSource>().Play();
 		
 		isFlipped = true;
 	

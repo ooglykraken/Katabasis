@@ -6,10 +6,8 @@ public class Gameplay : MonoBehaviour {
 	public int currentLevel;
 	public int finalLevel;
 	
-	// public bool testing;
-	// public bool lightsOn;
-	
 	public bool popupOpen;
+	public bool isLightOn;
 	
 	private Color lightsOut;
 	private Color lightsOn = Color.white;
@@ -22,12 +20,6 @@ public class Gameplay : MonoBehaviour {
 		
 		lightsOut = RenderSettings.ambientLight;
 		LightsOn();
-		// lightsOn = true;
-	
-		// currentLevel = 0;
-		
-		// if(!testing)
-			// NextLevel();
 	}
 	
 	public void Update(){
@@ -42,29 +34,41 @@ public class Gameplay : MonoBehaviour {
 		} else {
 			GameObject.Find("Player").GetComponent<Player>().enabled = true;
 		}
+		
+		if(!isLightOn){
+			LightsOff();
+		}
 	}
 	
 	public void LightsOff(){
 		RenderSettings.ambientLight = lightsOut;
+		isLightOn = false;
 	}
 	
 	public void LightsOn(){
 		RenderSettings.ambientLight = lightsOn;
+		isLightOn = true;
 	}
 	
 	public void NextLevel(){
-		// ClearThisLevel();
-	
-		// Level.Instance().LoadLevel();
 		
-		//Debug.Log(currentLevel);
+		// Handle jumping to the next stage.
+		if(Application.loadedLevel != Gameplay.Instance().finalLevel){
+			Application.LoadLevel(Application.loadedLevel + 1);
+			LightsOff();
+		} else {
+			FinishGame();
+		}
 	}
 	
+	public void FinishGame(){
+	}
 	private static Gameplay instance = null;
 	
 	public static Gameplay Instance(){
 		if(instance == null){
-			instance = (new GameObject("Gameplay")).AddComponent<Gameplay>();
+			// instance = (new GameObject("Gameplay")).AddComponent<Gameplay>();
+			instance = GameObject.Find("Gameplay").GetComponent<Gameplay>();
 		}
 		
 		return instance;

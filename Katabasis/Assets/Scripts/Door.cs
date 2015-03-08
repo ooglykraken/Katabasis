@@ -16,7 +16,7 @@ public class Door : MonoBehaviour {
 		// openDoor.renderer.enabled = true;
 		// openDoor.collider.enabled = true;
 	
-		audio.Play();
+		GetComponent<AudioSource>().Play();
 	
 		Renderer model = GetComponent<Renderer>();
 		Collider collider = GetComponent<Collider>();
@@ -59,8 +59,8 @@ public class Door : MonoBehaviour {
 		openRightDoor.transform.RotateAround(transform.position + halfScale, Vector3.back, 90f);
 		openLeftDoor.transform.RotateAround(transform.position - halfScale, Vector3.back, -90f);
 		
-		openRightDoor.renderer.enabled = false;
-		openLeftDoor.renderer.enabled = false;
+		openRightDoor.GetComponent<Renderer>().enabled = false;
+		openLeftDoor.GetComponent<Renderer>().enabled = false;
 	}
 	
 	public void Reappear(){

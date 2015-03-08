@@ -31,11 +31,11 @@ public class TimedSwitchAndLight : MonoBehaviour {
 			transform.Find("Plate").localPosition = new Vector3(transform.Find("Plate").localPosition.x, transform.Find("Plate").localPosition.y, -.01f);
 			switchLight.color = Color.green;
 			
-			if(c.transform.parent.tag == "Block" || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
+			if(c.transform.parent.tag == "Box" || c.transform.parent.tag == "Player" || c.transform.parent.tag == "SmokeEnemy"){
 				
 				active = true;
 				
-				audio.Play();
+				GetComponent<AudioSource>().Play();
 				
 				StartCoroutine(Reset ());
 				

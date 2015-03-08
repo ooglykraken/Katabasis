@@ -21,7 +21,7 @@ public class Stairs : MonoBehaviour {
 	public void OpenDoors(){
 		Debug.Log("OPEN");
 		
-		audio.Play();
+		GetComponent<AudioSource>().Play();
 		
 		
 		transform.Find("SpriteOpen").gameObject.SetActive(true);

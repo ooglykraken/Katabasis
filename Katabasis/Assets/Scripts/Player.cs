@@ -11,27 +11,32 @@ public class Player : MonoBehaviour {
 	private int verticalDirection;
 	private int horizontalDirection;
 	
+	private int playerDirection;
+	// this is the player facing from 0-3 : 0 is facing up, 1 is left, 2 is down, 3 is right
 	
 	public bool hasFloorKey;
 	public bool isWalking;
 	private bool isDoorOpen;
-	
-	//Added for SmokeEnemy 
-	// private bool isSlowed;
+	public bool hasLantern;
+	public bool hasLens;
+	public bool hasLaser;
+	public bool hasAntilight;
+
 	private Transform lensTransform;
 	private Transform lanternTransform;
 	
 	public GameObject activeLight;
 	private GameObject lantern;
 	private GameObject lens;
-	public bool hasLens;
+	
+	private SpriteRenderer sprite;
 	
 	public Transform teleportLocation;
 	
-	// public Texture2D boyFront;
-	// public Texture2D boyBack;
-	// public Texture2D boyLeft;
-	// public Texture2D boyRight;
+	public Sprite back;
+	public Sprite front;
+	public Sprite left;
+	public Sprite right;
 	
 	public void Awake(){
 		hasFloorKey = false;
@@ -50,6 +55,8 @@ public class Player : MonoBehaviour {
 		
 		startingLightRange = lantern.GetComponent<Light>().range;
 		// startingLightIntensity = lantern.GetComponent<Light>().intensity;
+		
+		sprite = transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>();
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -67,7 +74,7 @@ public class Player : MonoBehaviour {
 			// } else if(c.transform.parent.tag == "Enemy"){
 				// Death();
 			} else if(c.transform.parent.tag == "StairsUp"){
-				Finish();
+				Gameplay.Instance().FinishGame();
 			} else {
 			}
 		}
@@ -94,10 +101,11 @@ public class Player : MonoBehaviour {
 		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 
 		string floorCast = CheckFloor();
-		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor"){
+		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box"){
+			// Debug.Log("Im moving");
 			Move();
 		} else {
-			rigidbody.velocity = Vector3.zero;
+			GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
 		
 		// LoseLight();
@@ -106,24 +114,25 @@ public class Player : MonoBehaviour {
 			// lantern.GetComponent<Light>().range = startingLightRange;
 		// }
 		
-		if (Input.GetKeyDown ("1"))
+	}
+	
+	public void Update(){
+		if (Input.GetKeyUp ("1") && hasLantern)
 		{
 			activeLight.gameObject.SetActive (false);
 			activeLight = lantern;
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		if (Input.GetKeyDown ("2") && hasLens == true)
+		if (Input.GetKeyUp ("2") && hasLens)
 		{
 			activeLight.gameObject.SetActive (false);
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		//Check the SmokeEnemy related stuff
-		// Slowed();	
-		// CheckForSmokeEnemy();
-		
+		Animator playerAnimator = transform.Find("Animator").gameObject.GetComponent<Animator>();
+		playerAnimator.SetInteger("Direction", playerDirection);
 	}
 	
 	public void LateUpdate(){
@@ -149,31 +158,23 @@ public class Player : MonoBehaviour {
 			Turn("l-u");
 		}
 	
-		rigidbody.velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
-		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime);
+		GetComponent<Rigidbody>().velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
+		GetComponent<Rigidbody>().velocity = Vector3.Lerp(GetComponent<Rigidbody>().velocity, Vector3.zero, Time.deltaTime);
 		
 		if(horizontalDirection == 0 && verticalDirection == 0){
-			gameObject.audio.Stop();
+			gameObject.GetComponent<AudioSource>().Stop();
 			isWalking = false;
 		} else {
 			if(!isWalking){
-				gameObject.audio.Play();
+				gameObject.GetComponent<AudioSource>().Play();
 			}
 			isWalking = true;
 		}
+		
+		sprite.enabled = !isWalking;
+		transform.Find("Animator").gameObject.SetActive(isWalking);
+		transform.Find("Animator").gameObject.GetComponent<Animator>().SetBool("isWalking", isWalking);
 	}
-	
-	// private void Slowed()
-	// {
-		// if (isSlowed == true){
-			// movementSpeed = 2.5f;
-			// lightLostPerFrame = .003f;
-		// }else{
-			// movementSpeed = 5f;
-			// isSlowed = false;
-			// lightLostPerFrame = .001f;
-		// }
-	// }
 	
 	private void PickUpKey(GameObject key){
 			
@@ -184,20 +185,10 @@ public class Player : MonoBehaviour {
 		TextBox.Instance().UpdateText("You picked up a key....");
 	}
 	
-	// private void OpenDoorDown(){
-		// isDoorOpen = true;
-		
-		// Stairs.Instance().OpenDoors();
-	// }
-	
 	public void Descend(){
 		
-		// Handle jumping to the next stage.
-		if(Application.loadedLevel != Gameplay.Instance().finalLevel){
-			Application.LoadLevel(Application.loadedLevel + 1);
-		} else {
-			Finish();
-		}
+		Gameplay.Instance().NextLevel();
+		
 		isDoorOpen = false;
 		hasFloorKey = false;
 	}
@@ -239,32 +230,8 @@ public class Player : MonoBehaviour {
 		return "";
 	}
 	
-	// private void CheckForSmokeEnemy()
-	// {
-		// Added this for the stunning of SmokeEnemy 
-		// RaycastHit hit;
-		
-		// Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.position.z );
-		
-		// if (Physics.Raycast(ray, transform.up, out hit, 5f)) 
-		// {
-			// if ((hit.transform.tag == "SmokeEnemy"))
-			// {
-				// hit.transform.GetComponent<SmokeEnemy>().isHitByLight = true;
-			// }
-			// else
-			// {
-			// }
-		// }
-		
-	// }
-	
 	private void Death(){
 		// Reset the player to "spawn point" or entrance to room
-	}
-	
-	private void Finish(){
-		// End state of game
 	}
 	
 	private void Turn(string direction){
@@ -278,54 +245,26 @@ public class Player : MonoBehaviour {
 			case "up":
 				newFacing = new Vector3(270f, 90f, 0f);
 				
-				// playerSprite = boyBack;
-				
-				foreach(Transform t in transform){
-					if(t.tag == "Sprite"){
-						t.gameObject.SetActive(false);
-					}
-				}
-				
-				transform.Find("SpriteBack").gameObject.SetActive(true);
+				sprite.sprite = back;
+				playerDirection = 2;
 				break;
 			case "down":
 				newFacing = new Vector3(90f, 90f, 0f);
-
-				// playerMaterial.mainTexture = boyFront;	
 				
-				foreach(Transform t in transform){
-					if(t.tag == "Sprite"){
-						t.gameObject.SetActive(false);
-					}
-				}
-				
-				transform.Find("SpriteFront").gameObject.SetActive(true);				
+				sprite.sprite = front;
+				playerDirection = 0;		
 				break;
 			case "left":
 				newFacing = new Vector3(180f, 90f, 0f);
 				
-				// playerMaterial.mainTexture = boyLeft;
-				
-				foreach(Transform t in transform){
-					if(t.tag == "Sprite"){
-						t.gameObject.SetActive(false);
-					}
-				}
-				
-				transform.Find("SpriteLeft").gameObject.SetActive(true);
+				sprite.sprite = left;
+				playerDirection = 1;
 				break;
 			case "right":
 				newFacing = new Vector3(0f, 90f, 0f);
 				
-				// playerMaterial.mainTexture = boyRight;
-				
-				foreach(Transform t in transform){
-					if(t.tag == "Sprite"){
-						t.gameObject.SetActive(false);
-					}
-				}
-				
-				transform.Find("SpriteRight").gameObject.SetActive(true);
+				sprite.sprite = right;
+				playerDirection = 3;
 				break;
 			case "r-d":
 				// newFacing = new Vector3(0f, 0f, 225f);
@@ -373,13 +312,15 @@ public class Player : MonoBehaviour {
 	public void GetFirstLight(){
 		transform.Find("Lantern").gameObject.SetActive(true);
 		
+		hasLantern = true;
+		
 		Destroy(GameObject.Find("LanternPickup"));
 		// GameObject.Find("LanternPickup").GetComponent<Light>().enabled = false;
 	}
 	
-	public void ChangeLights(int light){
+	public void ChangeLights(){
 		// Handle switching between lights
-	
+		
 	}
 	
 	public void SpotLantern(){

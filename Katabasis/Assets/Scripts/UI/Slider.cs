@@ -22,8 +22,13 @@ public class Slider : MonoBehaviour {
 		sliderButton = transform.Find("SlideButton").gameObject;
 		sliderBar = transform.Find("SlideBar").gameObject;
 		
-		max = sliderBar.GetComponent<Renderer>().bounds.max.x;
-		min = sliderBar.GetComponent<Renderer>().bounds.min.x;
+		// Unfortunately this will have to be hardcoded til I find a better solution
+		
+		// max = sliderBar.GetComponent<Renderer>().bounds.max.x;
+		// min = sliderBar.GetComponent<Renderer>().bounds.min.x;
+		
+		min = -.4f;
+		max = .4f;
 		
 		distance = -min + max;
 		
@@ -31,14 +36,21 @@ public class Slider : MonoBehaviour {
 	}
 	
 	public void Start(){
-		float offset = (RenderSettings.ambientLight.r * increment) - 2;
+		float offset = (RenderSettings.ambientLight.r * increment) - max;
 		
-		sliderButton.transform.position = new Vector3(offset, sliderButton.transform.position.y, sliderButton.transform.position.z);
+		sliderButton.transform.localPosition = new Vector3(offset, sliderButton.transform.localPosition.y, sliderButton.transform.localPosition.z);
+	}
+	
+	public void FixedUpdate(){
+		// max = sliderBar.GetComponent<Renderer>().bounds.max.x;
+		// min = sliderBar.GetComponent<Renderer>().bounds.min.x;
 	}
 	
 	public void Update(){
 		
 		mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		
+		AdjustValue();
 		
 		if(!selected){
 			selected = Click();
@@ -51,7 +63,7 @@ public class Slider : MonoBehaviour {
 			MoveButton();
 		}
 		
-		AdjustValue();
+		// Debug.Log(sliderButton.transform.localPosition + " slider position." + offset + " button offset");
 	}
 	
 	private bool Click(){
@@ -88,15 +100,15 @@ public class Slider : MonoBehaviour {
 		
 		sliderButton.transform.position = new Vector3(mousePosition.x, sliderButton.transform.position.y, sliderButton.transform.position.z);
 	
-		if(sliderButton.transform.position.x < min){
-			sliderButton.transform.position = new Vector3(min, sliderButton.transform.position.y, sliderButton.transform.position.z);
-		} else if(sliderButton.transform.position.x > max){
-			sliderButton.transform.position = new Vector3(max, sliderButton.transform.position.y, sliderButton.transform.position.z);
+		if(sliderButton.transform.localPosition.x < min){
+			sliderButton.transform.localPosition = new Vector3(min, sliderButton.transform.localPosition.y, sliderButton.transform.localPosition.z);
+		} else if(sliderButton.transform.localPosition.x > max){
+			sliderButton.transform.localPosition = new Vector3(max, sliderButton.transform.localPosition.y, sliderButton.transform.localPosition.z);
 		}
 	}
 	
-	private void AdjustValue(){
-		float newValue = ((sliderButton.transform.position.x + 2) / increment);
+	public void AdjustValue(){
+		float newValue = ((sliderButton.transform.localPosition.x + max) / increment);
 		
 		Debug.Log(newValue);
 		
