@@ -20,11 +20,15 @@ public class Player : MonoBehaviour {
 	private bool isSlowed;
 	private Transform lensTransform;
 	private Transform lanternTransform;
+	private Transform laserTransform;
+	//
 	
 	public GameObject activeLight;
 	private GameObject lantern;
 	private GameObject lens;
+	private GameObject laser;
 	public bool hasLens;
+	public bool hasLaser;
 	
 	public Transform teleportLocation;
 	
@@ -40,6 +44,9 @@ public class Player : MonoBehaviour {
 		
 		lanternTransform = transform.Find("Lantern");
 		lantern = lanternTransform.gameObject;
+		
+		laserTransform = transform.Find ("Laser");
+		laser = laserTransform.gameObject;
 		
 		activeLight = lantern;
 		
@@ -107,19 +114,7 @@ public class Player : MonoBehaviour {
 			lantern.GetComponent<Light>().range = startingLightRange;
 		}
 		
-		if (Input.GetKeyDown ("1"))
-		{
-			activeLight.gameObject.SetActive (false);
-			activeLight = lantern;
-			activeLight.gameObject.SetActive (true);
-		}
-		
-		if (Input.GetKeyDown ("2") && hasLens == true)
-		{
-			activeLight.gameObject.SetActive (false);
-			activeLight = lens;
-			activeLight.gameObject.SetActive (true);
-		}
+		ChangeLights();
 		
 		//Check the SmokeEnemy related stuff
 		Slowed();	
@@ -320,8 +315,27 @@ public class Player : MonoBehaviour {
 		GameObject.Find("LanternPickup").GetComponent<Light>().enabled = false;
 	}
 	
-	public void ChangeLights(int light){
-		// Handle switching between lights
+	public void ChangeLights(){
+		if (Input.GetKeyDown ("1"))
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = lantern;
+			activeLight.gameObject.SetActive (true);
+		}
+		
+		if (Input.GetKeyDown ("2") && hasLens == true)
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = lens;
+			activeLight.gameObject.SetActive (true);
+		}
+		
+		if (Input.GetKeyDown ("3") && hasLaser == true)
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = laser;
+			activeLight.gameObject.SetActive (true);
+		}
 	
 	}
 	

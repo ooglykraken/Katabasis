@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Anger\RedLight.cs" />
      <Compile Include="Assets\Scripts\BoyWalkingAnimation.cs" />
      <Compile Include="Assets\Scripts\Denial\MovingPlatformCircle.cs" />
      <Compile Include="Assets\Scripts\Denial\MultiFloorSwitch.cs" />
