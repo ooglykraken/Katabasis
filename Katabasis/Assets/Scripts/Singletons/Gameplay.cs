@@ -9,6 +9,8 @@ public class Gameplay : MonoBehaviour {
 	public bool popupOpen;
 	public bool isLightOn;
 	
+	private Player player;
+	
 	private Color lightsOut;
 	private Color lightsOn = Color.white;
 	
@@ -22,7 +24,14 @@ public class Gameplay : MonoBehaviour {
 		LightsOn();
 	}
 	
+	public void Start(){
+		player = GameObject.Find("Player").GetComponent<Player>();
+		player.teleportLocation = GameObject.Find("SpawnLocation").transform.position;
+	}
+	
 	public void Update(){
+		currentLevel = Application.loadedLevel - 1;
+	
 		if(Input.GetKeyDown("escape") && !popupOpen){
 			popupOpen = true;
 			// Debug.Log("menu time");
@@ -38,6 +47,8 @@ public class Gameplay : MonoBehaviour {
 		if(!isLightOn){
 			LightsOff();
 		}
+		
+		player = GameObject.Find("Player").GetComponent<Player>();
 	}
 	
 	public void LightsOff(){
@@ -63,6 +74,7 @@ public class Gameplay : MonoBehaviour {
 	
 	public void FinishGame(){
 	}
+	
 	private static Gameplay instance = null;
 	
 	public static Gameplay Instance(){

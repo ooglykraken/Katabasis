@@ -11,7 +11,7 @@ public class FloorSwitch : MonoBehaviour {
 	public string downArgument;
 	public string upArgument;
 	
-	private bool active;
+	public bool active;
 	
 	public void OnTriggerStay(Collider c){
 		if(active){
@@ -20,6 +20,8 @@ public class FloorSwitch : MonoBehaviour {
 		
 		if (c.isTrigger == false)
 		{
+			
+			Debug.Log(c.name);
 			
 			transform.Find("Plate").localPosition = new Vector3(transform.Find("Plate").localPosition.x, transform.Find("Plate").localPosition.y, -.01f);
 			

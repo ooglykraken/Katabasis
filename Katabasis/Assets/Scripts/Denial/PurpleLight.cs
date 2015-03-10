@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PurpleLight : MonoBehaviour {
 	
-	private List<GameObject> revealedObjects = new List<GameObject>();
+	public List<GameObject> revealedObjects = new List<GameObject>();
 	
 	public void Update(){
 		
@@ -16,11 +16,11 @@ public class PurpleLight : MonoBehaviour {
 			switch(c.transform.parent.gameObject.name){
 				case ("Box-Fake"):
 					revealedObjects.Add(c.transform.parent.gameObject);
-					ChangeFakeBox(c.transform.parent.gameObject);
+					FakeBoxOff(c.transform.parent.gameObject);
 					break;
 				case ("Box-Invisible"):
 					revealedObjects.Add(c.transform.parent.gameObject);
-					ChangeInvisibleBox(c.transform.parent.gameObject);
+					InvisibleBoxOn(c.transform.parent.gameObject);
 					break;
 				default:
 					break;
@@ -52,11 +52,11 @@ public class PurpleLight : MonoBehaviour {
 			switch(c.transform.parent.gameObject.name){
 				case ("Box-Fake"):
 					revealedObjects.Remove(c.transform.parent.gameObject);
-					ChangeFakeBox(c.transform.parent.gameObject);
+					FakeBoxOn(c.transform.parent.gameObject);
 					break;
 				case ("Box-Invisible"):
 					revealedObjects.Remove(c.transform.parent.gameObject);
-					ChangeInvisibleBox(c.transform.parent.gameObject);
+					InvisibleBoxOff(c.transform.parent.gameObject);
 					break;
 				default:
 					break;
@@ -82,40 +82,10 @@ public class PurpleLight : MonoBehaviour {
 		}
 	}
 	
-	private void ChangeFakeBox(GameObject g){
-		Transform colliderTransform = g.transform.Find("Collider");
-		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
-		if(spriteObject.activeSelf){
-			// if it's already on
-			colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, 0f);
-			g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-			spriteObject.SetActive(false);
-		} else {
-			// if it's off
-			colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
-			g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-			spriteObject.SetActive(true);
-		}
-	}
-	
-	private void ChangeInvisibleBox(GameObject g){
-		Transform colliderTransform = g.transform.Find("Collider");
-		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
-		if(spriteObject.activeSelf){
-			// if it's already on
-			colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
-			g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-			spriteObject.SetActive(false);
-		} else {
-			// if it's off
-			colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, 0f);
-			g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-			spriteObject.SetActive(true);
-		}
-	}
-	
 	private void ChangeFloor(GameObject g){
 		Renderer floorRenderer = g.GetComponent<Renderer>();
+		
+		// Debug.Log(g.transform.parent.name);
 		
 		if(floorRenderer.enabled){
 			g.GetComponent<BoxCollider>().center = Vector3.back; 
@@ -140,5 +110,98 @@ public class PurpleLight : MonoBehaviour {
 	
 	private void ChangeDoor(GameObject g){
 		
+	}
+	
+	// This means the box is now revealed
+	private void FakeBoxOn(GameObject g){
+		Transform colliderTransform = g.transform.Find("Collider");
+		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+		
+		// Debug.Log("I'm a fake box and I'm being turned on");
+		
+		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
+		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		spriteObject.SetActive(true);
+
+	}
+	
+	// This means the box is now revealed
+	private void InvisibleBoxOn(GameObject g){
+		Transform colliderTransform = g.transform.Find("Collider");
+		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+		
+		// Debug.Log("I'm an invisible box and I'm being turned on");
+		
+		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, 0f);
+		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		spriteObject.SetActive(true);
+
+	}
+	
+	private void FakeBoxOff(GameObject g){
+		Transform colliderTransform = g.transform.Find("Collider");
+		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+		
+		// Debug.Log("I'm a fake box and I'm being turned off");
+		
+		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
+		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		spriteObject.SetActive(false);
+	}
+	
+	private void InvisibleBoxOff(GameObject g){
+		Transform colliderTransform = g.transform.Find("Collider");
+		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+		
+		// Debug.Log("I'm an invisible box and I'm being turned off");
+		
+		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
+		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		spriteObject.SetActive(false);
+	}
+	
+	
+	public void LensOff(){
+		foreach(GameObject g in revealedObjects){
+			if(g.tag == "Box"){
+				switch(g.name){
+					case ("Box-Fake"):
+						FakeBoxOn(g);
+						break;
+					case ("Box-Invisible"):
+						InvisibleBoxOff(g);
+						break;
+					default:
+						Debug.Log("Something is wrong! Lens Off");
+						break;
+				}
+			} else {
+				switch(g.name){
+					case ("PurpleLightFloor"):
+						ChangeFloor(g);
+						break;
+					case ("PurpleLightWall"):
+						ChangeWall(g);
+						break;
+					case ("PurpleLightDoor"):
+						ChangeDoor(g);
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		
+		revealedObjects.Clear();
+	}
+	
+	private static PurpleLight instance = null;
+	
+	public static PurpleLight Instance(){
+		if(instance == null){
+			instance = GameObject.Find("Lens").GetComponent<PurpleLight>();
+		}
+		
+		return instance;
 	}
 }

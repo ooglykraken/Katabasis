@@ -4,7 +4,7 @@ using System.Collections;
 public class MultiFloorSwitch : MonoBehaviour {
 
 	public int numberOfSwitches;
-	private int counter;
+	public int counter;
 	
 	public GameObject target;
 	

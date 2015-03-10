@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\Door.cs" />
      <Compile Include="Assets\Scripts\Fan.cs" />
      <Compile Include="Assets\Scripts\FloorSwitch.cs" />
+     <Compile Include="Assets\Scripts\FloorSwitches.cs" />
      <Compile Include="Assets\Scripts\InvisibleFloor.cs" />
      <Compile Include="Assets\Scripts\InvisibleFloorSwitch.cs" />
      <Compile Include="Assets\Scripts\Key.cs" />

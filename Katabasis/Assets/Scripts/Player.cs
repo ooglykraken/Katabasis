@@ -31,7 +31,7 @@ public class Player : MonoBehaviour {
 	
 	private SpriteRenderer sprite;
 	
-	public Transform teleportLocation;
+	public Vector3 teleportLocation;
 	
 	public Sprite back;
 	public Sprite front;
@@ -101,8 +101,9 @@ public class Player : MonoBehaviour {
 		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 
 		string floorCast = CheckFloor();
-		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box"){
+		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch"){
 			// Debug.Log("Im moving");
+		
 			Move();
 		} else {
 			GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -117,15 +118,22 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void Update(){
+		// Figure out how to jump between lights
 		if (Input.GetKeyUp ("1") && hasLantern)
 		{
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
 			activeLight.gameObject.SetActive (false);
 			activeLight = lantern;
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		if (Input.GetKeyUp ("2") && hasLens)
+		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens)
 		{
+			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				// PurpleLight.Instance().LensOff();
+			// }
 			activeLight.gameObject.SetActive (false);
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
@@ -224,6 +232,12 @@ public class Player : MonoBehaviour {
 		
 		Vector3 ray = transform.position + new Vector3(horizontalDirection *.35f, verticalDirection * .35f, -.2f);
 		if (Physics.Raycast(ray, Vector3.forward, out hit)){
+			if(hit.transform.parent.tag == "MovingPlatform"){
+				transform.parent = hit.transform.parent;
+			} else {
+				transform.parent = null;
+			}
+			
 			return hit.transform.tag;
 		}
 		
@@ -329,7 +343,7 @@ public class Player : MonoBehaviour {
 	
 	public void Teleport()
 	{
-		transform.position = teleportLocation.position;
+		transform.position = teleportLocation;
 	}
 	
 	// private static Player instance = null;

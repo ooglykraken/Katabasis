@@ -48,6 +48,7 @@ public class WallSwitch : MonoBehaviour {
 		{
 			Debug.Log("Floor is active now!");
 			bridgePiece.SetActive (true);
+			GameObject.Find("Player").GetComponent<Player>().Teleport();
 		}
 	}
 	
