@@ -4,33 +4,37 @@ using System.Collections;
 public class Gameplay : MonoBehaviour {
 	
 	public int currentLevel;
-	public int finalLevel;
+	public int finalLevel = 5;
 	
 	public bool popupOpen;
 	public bool isLightOn;
 	
 	private Player player;
 	
+	public Transform spawnLocation;
+	
 	private Color lightsOut;
 	private Color lightsOn = Color.white;
 	
 	public void Awake(){	
 		
-		DontDestroyOnLoad(gameObject);
+		// DontDestroyOnLoad(gameObject);
 		
 		popupOpen = false;
 		
 		lightsOut = RenderSettings.ambientLight;
-		LightsOn();
+		if(Application.loadedLevel == 1){
+			LightsOn();
+		}
 	}
 	
 	public void Start(){
 		player = GameObject.Find("Player").GetComponent<Player>();
-		player.teleportLocation = GameObject.Find("SpawnLocation").transform.position;
+		// spawnLocation = GameObject.Find("SpawnLocation").transform;
 	}
 	
 	public void Update(){
-		currentLevel = Application.loadedLevel - 1;
+		// currentLevel = Application.loadedLevel - 1;
 	
 		if(Input.GetKeyDown("escape") && !popupOpen){
 			popupOpen = true;
@@ -44,9 +48,9 @@ public class Gameplay : MonoBehaviour {
 			GameObject.Find("Player").GetComponent<Player>().enabled = true;
 		}
 		
-		if(!isLightOn){
-			LightsOff();
-		}
+		// if(!isLightOn){
+			// LightsOff();
+		// }
 		
 		player = GameObject.Find("Player").GetComponent<Player>();
 	}
@@ -62,14 +66,17 @@ public class Gameplay : MonoBehaviour {
 	}
 	
 	public void NextLevel(){
-		
+		// spawnLocation = null;
 		// Handle jumping to the next stage.
 		if(Application.loadedLevel != Gameplay.Instance().finalLevel){
+			
 			Application.LoadLevel(Application.loadedLevel + 1);
 			LightsOff();
+			
 		} else {
 			FinishGame();
 		}
+		// spawnLocation = GameObject.Find("SpawnLocation").transform;
 	}
 	
 	public void FinishGame(){

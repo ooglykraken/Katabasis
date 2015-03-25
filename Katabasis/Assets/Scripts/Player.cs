@@ -101,7 +101,7 @@ public class Player : MonoBehaviour {
 		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 
 		string floorCast = CheckFloor();
-		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch"){
+		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch" || floorCast == "Statue"){
 			// Debug.Log("Im moving");
 		
 			Move();
@@ -141,6 +141,10 @@ public class Player : MonoBehaviour {
 		
 		Animator playerAnimator = transform.Find("Animator").gameObject.GetComponent<Animator>();
 		playerAnimator.SetInteger("Direction", playerDirection);
+		
+		if(Gameplay.Instance().spawnLocation != null){
+			teleportLocation = Gameplay.Instance().spawnLocation.position;
+		}
 	}
 	
 	public void LateUpdate(){
