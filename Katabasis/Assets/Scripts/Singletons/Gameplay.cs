@@ -4,7 +4,7 @@ using System.Collections;
 public class Gameplay : MonoBehaviour {
 	
 	public int currentLevel;
-	public int finalLevel = 5;
+	public int finalLevel;
 	
 	public bool popupOpen;
 	public bool isLightOn;
@@ -26,6 +26,9 @@ public class Gameplay : MonoBehaviour {
 		if(Application.loadedLevel == 1){
 			LightsOn();
 		}
+		
+		finalLevel = Application.levelCount;
+		currentLevel = 0;
 	}
 	
 	public void Start(){
@@ -39,7 +42,7 @@ public class Gameplay : MonoBehaviour {
 		if(Input.GetKeyDown("escape") && !popupOpen){
 			popupOpen = true;
 			// Debug.Log("menu time");
-			Popup p = Instantiate(Resources.Load("UI/Popup", typeof(Popup)) as Popup) as Popup; 
+			Popup p = Instantiate(Resources.Load("UI/In-Game Menu", typeof(Popup)) as Popup) as Popup; 
 		}
 		
 		if(popupOpen){
@@ -77,6 +80,14 @@ public class Gameplay : MonoBehaviour {
 			FinishGame();
 		}
 		// spawnLocation = GameObject.Find("SpawnLocation").transform;
+	}
+	
+	public void RestartLevel(){
+		Application.LoadLevel(Application.loadedLevel);
+	}
+	
+	public void ExitGame(){
+		Application.Quit();
 	}
 	
 	public void FinishGame(){

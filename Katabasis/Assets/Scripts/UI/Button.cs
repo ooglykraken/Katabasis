@@ -8,7 +8,16 @@ public class Button : MonoBehaviour {
 	public string downArgument;
 	public string downFunction;
 	
+	//Special addendum for Katabasis
+	public void Awake(){
+		if(transform.parent.gameObject.name == "BtnRestart" || transform.parent.gameObject.name == "BtnExitGame"){
+			downTarget = GameObject.Find("Gameplay");
+		}
+	}
+	
 	public void OnMouseOver(){
+		Debug.Log("Hovering");
+	
 		if(Input.GetMouseButtonDown(0)){
 			if (downTarget) {
 				if (downFunction.Length > 0) {
