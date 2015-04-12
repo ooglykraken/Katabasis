@@ -17,20 +17,35 @@ public class Player : MonoBehaviour {
 	public bool hasFloorKey;
 	public bool isWalking;
 	private bool isDoorOpen;
+<<<<<<< HEAD
 	public bool hasLantern;
 	public bool hasLens;
 	public bool hasLaser;
 	public bool hasAntilight;
 	private bool holdingBox;
+=======
+	
+	//Added for SmokeEnemy 
+	private bool isSlowed;
+	private Transform lensTransform;
+	private Transform lanternTransform;
+	private Transform laserTransform;
+	//
+>>>>>>> b96716b3173aead13a198c842107b05758f21160
 	
 	public GameObject activeLight;
 	private GameObject lantern;
 	private GameObject lens;
 	private GameObject laser;
+<<<<<<< HEAD
 	
 	private SpriteRenderer sprite;
 	
 	public Vector3 teleportLocation;
+=======
+	public bool hasLens;
+	public bool hasLaser;
+>>>>>>> b96716b3173aead13a198c842107b05758f21160
 	
 	public Sprite back;
 	public Sprite front;
@@ -44,6 +59,9 @@ public class Player : MonoBehaviour {
 		laser = transform.Find ("Laser").gameObject;
 		lantern = transform.Find ("Lantern").gameObject;
 		sprite = transform.Find ("Sprite").gameObject.GetComponent<SpriteRenderer>();
+		
+		laserTransform = transform.Find ("Laser");
+		laser = laserTransform.gameObject;
 		
 		activeLight = lantern;
 
@@ -108,6 +126,7 @@ public class Player : MonoBehaviour {
 			// lantern.GetComponent<Light>().range = startingLightRange;
 		// }
 		
+<<<<<<< HEAD
 	}
 	
 	public void Update(){
@@ -131,6 +150,9 @@ public class Player : MonoBehaviour {
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
 		}
+=======
+		ChangeLights();
+>>>>>>> b96716b3173aead13a198c842107b05758f21160
 		
 		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
 		{
@@ -394,8 +416,32 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void ChangeLights(){
+<<<<<<< HEAD
 		// Handle switching between lights
 		
+=======
+		if (Input.GetKeyDown ("1"))
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = lantern;
+			activeLight.gameObject.SetActive (true);
+		}
+		
+		if (Input.GetKeyDown ("2") && hasLens == true)
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = lens;
+			activeLight.gameObject.SetActive (true);
+		}
+		
+		if (Input.GetKeyDown ("3") && hasLaser == true)
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = laser;
+			activeLight.gameObject.SetActive (true);
+		}
+	
+>>>>>>> b96716b3173aead13a198c842107b05758f21160
 	}
 	
 	public void SpotLantern(){

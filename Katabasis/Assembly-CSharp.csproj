@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
      <Compile Include="Assets\Scripts\Anger\BoxSpawner.cs" />
      <Compile Include="Assets\Scripts\Anger\ConveyorBelt.cs" />
      <Compile Include="Assets\Scripts\Anger\DeleteZone.cs" />
@@ -54,6 +55,10 @@
      <Compile Include="Assets\Scripts\Anger\RedLight.cs" />
      <Compile Include="Assets\Scripts\Anger\RedLightGiver.cs" />
      <Compile Include="Assets\Scripts\Bargaining\NPC.cs" />
+=======
+     <Compile Include="Assets\Scripts\Anger\RedLight.cs" />
+     <Compile Include="Assets\Scripts\BoyWalkingAnimation.cs" />
+>>>>>>> b96716b3173aead13a198c842107b05758f21160
      <Compile Include="Assets\Scripts\Denial\MovingPlatformCircle.cs" />
      <Compile Include="Assets\Scripts\Denial\MultiFloorSwitch.cs" />
      <Compile Include="Assets\Scripts\Denial\PurpleLight.cs" />
