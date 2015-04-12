@@ -17,7 +17,7 @@ public class TimedSwitchAndLight : MonoBehaviour {
 	
 	public void Awake()
 	{
-		switchLight = GetComponentInParent<Light>();
+		switchLight = GetComponentInChildren<Light>();
 	}
 	
 	public void OnTriggerStay(Collider c){

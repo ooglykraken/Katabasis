@@ -109,7 +109,18 @@ public class PurpleLight : MonoBehaviour {
 	}
 	
 	private void ChangeDoor(GameObject g){
+		Renderer doorRenderer = g.transform.GetComponent<MeshRenderer>();
 		
+		if(doorRenderer.enabled)
+		{
+			g.GetComponent<BoxCollider>().center = 2*Vector3.forward;
+			doorRenderer.enabled = false;
+		}
+		else
+		{
+			g.GetComponent<BoxCollider>().center = Vector3.zero;
+			doorRenderer.enabled = true;
+		}
 	}
 	
 	// This means the box is now revealed

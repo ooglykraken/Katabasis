@@ -21,13 +21,12 @@ public class Player : MonoBehaviour {
 	public bool hasLens;
 	public bool hasLaser;
 	public bool hasAntilight;
-
-	private Transform lensTransform;
-	private Transform lanternTransform;
+	private bool holdingBox;
 	
 	public GameObject activeLight;
 	private GameObject lantern;
 	private GameObject lens;
+	private GameObject laser;
 	
 	private SpriteRenderer sprite;
 	
@@ -40,23 +39,16 @@ public class Player : MonoBehaviour {
 	
 	public void Awake(){
 		hasFloorKey = false;
-		hasLens = false;
 		
-		//Added for SmokeEnemy slow effect
-		// isSlowed = false;
-		
-		lensTransform = transform.Find ("Lens");
-		lens = lensTransform.gameObject;
-		
-		lanternTransform = transform.Find("Lantern");
-		lantern = lanternTransform.gameObject;
+		lens = transform.Find ("Lens").gameObject;
+		laser = transform.Find ("Laser").gameObject;
+		lantern = transform.Find ("Lantern").gameObject;
+		sprite = transform.Find ("Sprite").gameObject.GetComponent<SpriteRenderer>();
 		
 		activeLight = lantern;
-		
+
 		startingLightRange = lantern.GetComponent<Light>().range;
 		// startingLightIntensity = lantern.GetComponent<Light>().intensity;
-		
-		sprite = transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>();
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -85,7 +77,7 @@ public class Player : MonoBehaviour {
 	{
 		if (c.transform.name.Equals ("PurpleLightFloor"))
 		{
-			gameObject.transform.SetParent(c.transform);
+			gameObject.transform.SetParent(c.transform.parent);
 			
 		}
 		
@@ -101,7 +93,7 @@ public class Player : MonoBehaviour {
 		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 
 		string floorCast = CheckFloor();
-		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch"){
+		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch" || floorCast == "ConveyorBelt"){
 			// Debug.Log("Im moving");
 		
 			Move();
@@ -119,7 +111,7 @@ public class Player : MonoBehaviour {
 	
 	public void Update(){
 		// Figure out how to jump between lights
-		if (Input.GetKeyUp ("1") && hasLantern)
+		if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring)
 		{
 			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
 				PurpleLight.Instance().LensOff();
@@ -129,7 +121,7 @@ public class Player : MonoBehaviour {
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens)
+		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
 		{
 			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
 				// PurpleLight.Instance().LensOff();
@@ -139,6 +131,18 @@ public class Player : MonoBehaviour {
 			activeLight.gameObject.SetActive (true);
 		}
 		
+		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
+		{
+			activeLight.gameObject.SetActive (false);
+			activeLight = laser;
+			activeLight.gameObject.SetActive (true);
+		}
+
+		if (Input.GetKeyUp ("e"))
+		{
+			Activate();
+		}
+
 		Animator playerAnimator = transform.Find("Animator").gameObject.GetComponent<Animator>();
 		playerAnimator.SetInteger("Direction", playerDirection);
 	}
@@ -183,6 +187,53 @@ public class Player : MonoBehaviour {
 		transform.Find("Animator").gameObject.SetActive(isWalking);
 		transform.Find("Animator").gameObject.GetComponent<Animator>().SetBool("isWalking", isWalking);
 	}
+	
+	private void Activate()
+	{
+		RaycastHit hit;
+		
+		if (Physics.Raycast(transform.position, lantern.transform.forward, out hit, 1.5f))
+		{
+			  switch (hit.transform.gameObject.tag)
+			  {
+			  	case ("Box"):
+			  		GrabOrDropBox(hit.transform.gameObject);
+			  		break;
+			  	case ("Cube"):
+			  		GrabOrDropBox(hit.transform.gameObject);
+			  		break;
+			  	case ("NPC"):
+			  		hit.transform.gameObject.GetComponent<NPC>().Talk();
+			  		break;
+			  	case ("Mirror"):
+			  		hit.transform.GetComponent<Mirror>().RotateMirror();
+			  		break;
+			  	case ("MAGLaser"):
+			  		hit.transform.GetComponent<MAGLaser>().Fire();
+			  		break;
+				default:
+					break;
+			  }
+		}
+	}
+	
+	private void GrabOrDropBox(GameObject o)
+	{
+		if (!holdingBox)
+		{
+			o.transform.SetParent(gameObject.transform);
+			holdingBox = true;
+		}
+		else
+		{
+			if (transform.FindChild("Box"))
+			{
+				transform.FindChild ("Box").SetParent(null);
+				holdingBox = false;
+			}
+		}
+	}
+	
 	
 	private void PickUpKey(GameObject key){
 			
@@ -237,7 +288,10 @@ public class Player : MonoBehaviour {
 			} else {
 				transform.parent = null;
 			}
-			
+			if (hit.transform.gameObject.name == "ConveyorBelt")
+			{
+				gameObject.GetComponent<Rigidbody>().velocity += hit.transform.up * 15f *Time.deltaTime;
+			}
 			return hit.transform.tag;
 		}
 		
@@ -282,28 +336,29 @@ public class Player : MonoBehaviour {
 				break;
 			case "r-d":
 				// newFacing = new Vector3(0f, 0f, 225f);
-				newFacing = transform.Find("Lantern").eulerAngles;
+				newFacing = lantern.transform.eulerAngles;
 				break;
 			case "l-d":
 				// newFacing = new Vector3(0f, 0f, 135f);
 				
-				newFacing = transform.Find("Lantern").eulerAngles;
+				newFacing = lantern.transform.eulerAngles;
 				break;
 			case "r-u":
 				// newFacing = new Vector3(0f, 0f, 325f);
 				
-				newFacing = transform.Find("Lantern").eulerAngles;
+				newFacing = lantern.transform.eulerAngles;
 				break;
 			case "l-u":
 				// newFacing = new Vector3(0f, 0f, 45f);
 				
-				newFacing = transform.Find("Lantern").eulerAngles;
+				newFacing = lantern.transform.eulerAngles;
 				break;
 			default:
 				break;
 		}
 		
-		transform.Find("Lantern").eulerAngles = newFacing;
+		lantern.transform.eulerAngles = newFacing;
+		laser.transform.eulerAngles = newFacing;
 	}
 	
 	private void CameraFollow(){
