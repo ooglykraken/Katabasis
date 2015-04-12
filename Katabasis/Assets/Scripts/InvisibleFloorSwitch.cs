@@ -18,7 +18,7 @@ public class InvisibleFloorSwitch : MonoBehaviour {
 			}
 		}
 		
-		if(Gameplay.Instance().currentLevel == 0 && Gameplay.Instance().isLightOn){
+		if(Gameplay.Instance().currentLevel == 1 && Gameplay.Instance().isLightOn){
 			Gameplay.Instance().LightsOff();
 		}
 		

@@ -93,7 +93,8 @@ public class Player : MonoBehaviour {
 		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 
 		string floorCast = CheckFloor();
-		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch" || floorCast == "ConveyorBelt"){
+
+		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch" || floorCast == "Statue" || floorCast == "ConveyorBelt"){
 			// Debug.Log("Im moving");
 		
 			Move();
@@ -123,9 +124,9 @@ public class Player : MonoBehaviour {
 		
 		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
 		{
-			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				// PurpleLight.Instance().LensOff();
-			// }
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
 			activeLight.gameObject.SetActive (false);
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
@@ -145,6 +146,10 @@ public class Player : MonoBehaviour {
 
 		Animator playerAnimator = transform.Find("Animator").gameObject.GetComponent<Animator>();
 		playerAnimator.SetInteger("Direction", playerDirection);
+		
+		if(Gameplay.Instance().spawnLocation != null){
+			teleportLocation = Gameplay.Instance().spawnLocation.position;
+		}
 	}
 	
 	public void LateUpdate(){
@@ -209,7 +214,8 @@ public class Player : MonoBehaviour {
 			  		hit.transform.GetComponent<Mirror>().RotateMirror();
 			  		break;
 			  	case ("MAGLaser"):
-			  		hit.transform.GetComponent<MAGLaser>().Fire();
+			  		Debug.Log("activate mag");
+			  		StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
 			  		break;
 				default:
 					break;

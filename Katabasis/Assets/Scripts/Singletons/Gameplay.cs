@@ -11,31 +11,38 @@ public class Gameplay : MonoBehaviour {
 	
 	private Player player;
 	
+	public Transform spawnLocation;
+	
 	private Color lightsOut;
 	private Color lightsOn = Color.white;
 	
 	public void Awake(){	
 		
-		DontDestroyOnLoad(gameObject);
+		// DontDestroyOnLoad(gameObject);
 		
 		popupOpen = false;
 		
 		lightsOut = RenderSettings.ambientLight;
-		LightsOn();
+		if(Application.loadedLevel == 1){
+			LightsOn();
+		}
+		
+		finalLevel = Application.levelCount;
+		currentLevel = 0;
 	}
 	
 	public void Start(){
 		player = GameObject.Find("Player").GetComponent<Player>();
-		player.teleportLocation = GameObject.Find("SpawnLocation").transform.position;
+		spawnLocation = GameObject.Find("SpawnLocation").transform;
 	}
 	
 	public void Update(){
-		currentLevel = Application.loadedLevel - 1;
+		// currentLevel = Application.loadedLevel - 1;
 	
 		if(Input.GetKeyDown("escape") && !popupOpen){
 			popupOpen = true;
 			// Debug.Log("menu time");
-			Popup p = Instantiate(Resources.Load("UI/Popup", typeof(Popup)) as Popup) as Popup; 
+			Popup p = Instantiate(Resources.Load("UI/In-Game Menu", typeof(Popup)) as Popup) as Popup; 
 		}
 		
 		if(popupOpen){
@@ -44,9 +51,9 @@ public class Gameplay : MonoBehaviour {
 			GameObject.Find("Player").GetComponent<Player>().enabled = true;
 		}
 		
-		if(!isLightOn){
-			LightsOff();
-		}
+		// if(!isLightOn){
+			// LightsOff();
+		// }
 		
 		player = GameObject.Find("Player").GetComponent<Player>();
 	}
@@ -62,14 +69,25 @@ public class Gameplay : MonoBehaviour {
 	}
 	
 	public void NextLevel(){
-		
+		// spawnLocation = null;
 		// Handle jumping to the next stage.
 		if(Application.loadedLevel != Gameplay.Instance().finalLevel){
+			
 			Application.LoadLevel(Application.loadedLevel + 1);
 			LightsOff();
+			
 		} else {
 			FinishGame();
 		}
+		// spawnLocation = GameObject.Find("SpawnLocation").transform;
+	}
+	
+	public void RestartLevel(){
+		Application.LoadLevel(Application.loadedLevel);
+	}
+	
+	public void ExitGame(){
+		Application.Quit();
 	}
 	
 	public void FinishGame(){
