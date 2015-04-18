@@ -3,7 +3,7 @@ using System.Collections;
 
 public class RedLight : MonoBehaviour {
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
 	public Light redLight;
 	public bool isFiring;
 	
@@ -39,7 +39,7 @@ public class RedLight : MonoBehaviour {
 		
 	}
 	
-=======
+// =======
 	public void FixedUpdate()
 	{	
 		CheckForBreakableWalls();
@@ -64,5 +64,5 @@ public class RedLight : MonoBehaviour {
 			}
 		}
 	}
->>>>>>> b96716b3173aead13a198c842107b05758f21160
+// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 }

@@ -17,13 +17,13 @@ public class Player : MonoBehaviour {
 	public bool hasFloorKey;
 	public bool isWalking;
 	private bool isDoorOpen;
-<<<<<<< HEAD
+// <<<<<<< HEAD
 	public bool hasLantern;
 	public bool hasLens;
 	public bool hasLaser;
 	public bool hasAntilight;
 	private bool holdingBox;
-=======
+// =======
 	
 	//Added for SmokeEnemy 
 	private bool isSlowed;
@@ -31,21 +31,21 @@ public class Player : MonoBehaviour {
 	private Transform lanternTransform;
 	private Transform laserTransform;
 	//
->>>>>>> b96716b3173aead13a198c842107b05758f21160
+// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 	
 	public GameObject activeLight;
 	private GameObject lantern;
 	private GameObject lens;
 	private GameObject laser;
-<<<<<<< HEAD
+// <<<<<<< HEAD
 	
 	private SpriteRenderer sprite;
 	
 	public Vector3 teleportLocation;
-=======
-	public bool hasLens;
-	public bool hasLaser;
->>>>>>> b96716b3173aead13a198c842107b05758f21160
+// =======
+	// public bool hasLens;
+	// public bool hasLaser;
+// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 	
 	public Sprite back;
 	public Sprite front;
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour {
 			// lantern.GetComponent<Light>().range = startingLightRange;
 		// }
 		
-<<<<<<< HEAD
+// <<<<<<< HEAD
 	}
 	
 	public void Update(){
@@ -150,9 +150,9 @@ public class Player : MonoBehaviour {
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
 		}
-=======
+// =======
 		ChangeLights();
->>>>>>> b96716b3173aead13a198c842107b05758f21160
+// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 		
 		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
 		{
@@ -416,10 +416,10 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void ChangeLights(){
-<<<<<<< HEAD
+// <<<<<<< HEAD
 		// Handle switching between lights
 		
-=======
+// =======
 		if (Input.GetKeyDown ("1"))
 		{
 			activeLight.gameObject.SetActive (false);
@@ -441,7 +441,7 @@ public class Player : MonoBehaviour {
 			activeLight.gameObject.SetActive (true);
 		}
 	
->>>>>>> b96716b3173aead13a198c842107b05758f21160
+// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 	}
 	
 	public void SpotLantern(){
