@@ -6,6 +6,7 @@ Ian Ford              Phone: (317)201-6948  Email: iford@indiana.edu
 Max Lancaster	Phone: (847) 867-0867 Email: mllancas@indiana.edu
 Kyle James         Phone: (812) 619-1113 Email: kyrjames@imail.iu.edu
 Dewayne White  Phone: (317) 340-2532 Email: dewwhite@indiana.edu
+Nick Root	Phone: (812) 361-5818 Email: ndroot@indiana.edu
 
 
 Katabasis Design Document
