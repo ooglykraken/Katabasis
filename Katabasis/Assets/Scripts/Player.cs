@@ -60,8 +60,8 @@ public class Player : MonoBehaviour {
 		lantern = transform.Find ("Lantern").gameObject;
 		sprite = transform.Find ("Sprite").gameObject.GetComponent<SpriteRenderer>();
 		
-		laserTransform = transform.Find ("Laser");
-		laser = laserTransform.gameObject;
+		// laserTransform = transform.Find ("Laser");
+		// laser = laserTransform.gameObject;
 		
 		activeLight = lantern;
 
@@ -143,19 +143,23 @@ public class Player : MonoBehaviour {
 		
 		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
 		{
-			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				PurpleLight.Instance().LensOff();
-			}
+			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				// PurpleLight.Instance().LensOff();
+			// }
 			activeLight.gameObject.SetActive (false);
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
 		}
 // =======
-		ChangeLights();
+		// ChangeLights();
 // >>>>>>> b96716b3173aead13a198c842107b05758f21160
 		
 		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
 		{
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
+		
 			activeLight.gameObject.SetActive (false);
 			activeLight = laser;
 			activeLight.gameObject.SetActive (true);
@@ -265,11 +269,17 @@ public class Player : MonoBehaviour {
 	
 	private void PickUpKey(GameObject key){
 			
+		
 		hasFloorKey = true;
+		
+		key.GetComponent<AudioSource>().Play();
+		
 		Destroy(key);
 		
 		
 		TextBox.Instance().UpdateText("You picked up a key....");
+		
+		
 	}
 	
 	public void Descend(){
@@ -451,6 +461,7 @@ public class Player : MonoBehaviour {
 	public void Teleport()
 	{
 		transform.position = teleportLocation;
+		Gameplay.Instance().spawnLocation.gameObject.GetComponent<AudioSource>().Play();
 	}
 	
 	// private static Player instance = null;

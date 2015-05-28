@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class WallSwitch : MonoBehaviour {
-
+	public Material leverUp;
+	public Material leverDown;
+	
 	public GameObject target;
 	
 	public string function;
@@ -31,9 +33,11 @@ public class WallSwitch : MonoBehaviour {
 		GetComponent<AudioSource>().Play();
 		
 		isFlipped = true;
-	
-		Transform handle = transform.Find("Handle").GetComponent<Transform>();
-		handle.eulerAngles	= new Vector3(transform.eulerAngles.x, 600f, transform.eulerAngles.z);
+		
+		transform.Find("Model").gameObject.GetComponent<Renderer>().material = leverDown;
+		
+		// Transform handle = transform.Find("Handle").GetComponent<Transform>();
+		// handle.eulerAngles	= new Vector3(transform.eulerAngles.x, 600f, transform.eulerAngles.z);
 		
 		if (target) {
 			if (function.Length > 0) {
