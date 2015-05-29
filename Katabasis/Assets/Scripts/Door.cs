@@ -31,7 +31,7 @@ public class Door : MonoBehaviour {
 		// bool isHorizontal;
 		Vector3 newSize;
 		
-		openDoor = Instantiate(Resources.Load("OpenDoor(Puzzle)", typeof(GameObject)) as GameObject) as GameObject;
+		openDoor = Instantiate(Resources.Load("Door", typeof(GameObject)) as GameObject) as GameObject;
 		
 		openDoor.transform.position = this.transform.position;
 		openDoor.transform.eulerAngles = this.transform.eulerAngles;

@@ -4,8 +4,6 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	public float movementSpeed;
-	// public float lightLostPerFrame = .001f;
-	// private float startingLightIntensity;
 	private float startingLightRange;
 	
 	private int verticalDirection;
@@ -15,26 +13,43 @@ public class Player : MonoBehaviour {
 	
 	private Vector3 playerForward;
 	private int playerDirection;
-	// this is the player facing from 0-3 : 0 is facing up, 1 is left, 2 is down, 3 is right
 	
 	public bool hasFloorKey;
 	public bool isWalking;
 	private bool isDoorOpen;
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	public bool hasLantern;
 	public bool hasLens;
 	public bool hasLaser;
 	private bool holdingBox;
+<<<<<<< HEAD
+=======
+	
+	private bool isSlowed;
+	private Transform lensTransform;
+	private Transform lanternTransform;
+	private Transform laserTransform;
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	
 	public GameObject activeLight;
 	private GameObject lantern;
 	private GameObject lens;
 	private GameObject laser;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	
 	private SpriteRenderer sprite;
 	
 	public Vector3 teleportLocation;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	
 	public Sprite back;
 	public Sprite front;
@@ -48,6 +63,14 @@ public class Player : MonoBehaviour {
 		laser = transform.Find ("Laser").gameObject;
 		lantern = transform.Find ("Lantern").gameObject;
 		sprite = transform.Find ("Sprite").gameObject.GetComponent<SpriteRenderer>();
+<<<<<<< HEAD
+=======
+		
+		// laserTransform = transform.Find ("Laser");
+		// laser = laserTransform.gameObject;
+		
+		activeLight = lantern;
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 
 		startingLightRange = lantern.GetComponent<Light>().range;
 		// startingLightIntensity = lantern.GetComponent<Light>().intensity;
@@ -102,7 +125,9 @@ public class Player : MonoBehaviour {
 			// Debug.Log("Im moving");
 		
 			Move();
-		} else {
+		} else if(floorCast == "LowerBoundary"){
+			Teleport();
+		}else {
 			GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
 		
@@ -112,10 +137,48 @@ public class Player : MonoBehaviour {
 			// lantern.GetComponent<Light>().range = startingLightRange;
 		// }
 		
+<<<<<<< HEAD
 	}
 	
 	public void Update(){
 		ChangeLights();
+=======
+// <<<<<<< HEAD
+	}
+	
+	public void Update(){
+		// Figure out how to jump between lights
+		if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring)
+		{
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
+			activeLight.gameObject.SetActive (false);
+			activeLight = lantern;
+			activeLight.gameObject.SetActive (true);
+		}
+		
+		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
+		{
+			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				// PurpleLight.Instance().LensOff();
+			// }
+			activeLight.gameObject.SetActive (false);
+			activeLight = lens;
+			activeLight.gameObject.SetActive (true);
+		}
+		
+		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
+		{
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
+		
+			activeLight.gameObject.SetActive (false);
+			activeLight = laser;
+			activeLight.gameObject.SetActive (true);
+		}
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 
 		if (Input.GetKeyUp ("e"))
 		{
@@ -182,7 +245,7 @@ public class Player : MonoBehaviour {
 		
 		if (Physics.Raycast(transform.position, playerForward, out hit, 1.5f))
 		{
-			  switch (hit.transform.gameObject.tag)
+			  switch (hit.transform.tag)
 			  {
 			  	case ("Box"):
 			  		GrabOrDropBox(hit.transform.gameObject);
@@ -191,10 +254,15 @@ public class Player : MonoBehaviour {
 			  		hit.transform.gameObject.GetComponent<NPC>().Talk();
 			  		break;
 			  	case ("Mirror"):
-			  		hit.transform.GetComponent<Mirror>().RotateMirror();
+			  		hit.transform.gameObject.GetComponent<Mirror>().RotateMirror();
 			  		break;
 			  	case ("MAGLaser"):
+<<<<<<< HEAD
 			  		StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
+=======
+			  		Debug.Log("activate mag");
+			  		// StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 			  		break;
 			  	case ("LightBeacon"):
 			  		hit.transform.gameObject.GetComponent<LightBeacon>().TakeLight();
@@ -225,11 +293,17 @@ public class Player : MonoBehaviour {
 	
 	private void PickUpKey(GameObject key){
 			
+		
 		hasFloorKey = true;
+		
+		key.GetComponent<AudioSource>().Play();
+		
 		Destroy(key);
 		
 		
 		TextBox.Instance().UpdateText("You picked up a key....");
+		
+		
 	}
 	
 	public void Descend(){
@@ -270,7 +344,7 @@ public class Player : MonoBehaviour {
 		
 		Vector3 ray = transform.position + new Vector3(horizontalDirection *.35f, verticalDirection * .35f, -.2f);
 		if (Physics.Raycast(ray, Vector3.forward, out hit)){
-			if(hit.transform.parent.tag == "MovingPlatform"){
+			if(hit.transform.parent && hit.transform.parent.tag == "MovingPlatform"){
 				transform.parent = hit.transform.parent;
 			} else {
 				transform.parent = null;
@@ -374,9 +448,17 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void ChangeLights(){
+<<<<<<< HEAD
 		// Handle switching between lights
 		
 		if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring)
+=======
+// <<<<<<< HEAD
+		// Handle switching between lights
+		
+// =======
+		if (Input.GetKeyDown ("1"))
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 		{
 			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
 				PurpleLight.Instance().LensOff();
@@ -415,6 +497,7 @@ public class Player : MonoBehaviour {
 	public void Teleport()
 	{
 		transform.position = teleportLocation;
+		Gameplay.Instance().spawnLocation.gameObject.GetComponent<AudioSource>().Play();
 	}
 	
 	// private static Player instance = null;

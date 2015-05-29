@@ -3,6 +3,10 @@ using System.Collections;
 
 public class RedLight : MonoBehaviour {
 
+<<<<<<< HEAD
+=======
+// <<<<<<< HEAD
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	public Light redLight;
 	public bool isFiring;
 	
@@ -39,8 +43,26 @@ public class RedLight : MonoBehaviour {
 		
 		redLight.enabled = false;
 		
+<<<<<<< HEAD
 		yield return new WaitForSeconds(.5f);
 		isFiring = false;
+=======
+	}
+	
+// =======
+	public void FixedUpdate()
+	{	
+		CheckForBreakableWalls();
+	}
+
+	public void CheckForBreakableWalls()
+	{
+		RaycastHit hit;
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 		
 	}
+<<<<<<< HEAD
+=======
+// >>>>>>> b96716b3173aead13a198c842107b05758f21160
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 }

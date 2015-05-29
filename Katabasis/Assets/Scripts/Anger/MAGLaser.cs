@@ -3,18 +3,18 @@ using System.Collections;
 
 public class MAGLaser : MonoBehaviour {
 
-	private Light light;
+	// private Light light;
 	private bool isFiring;
 	
 	void Awake()
 	{
-		light = gameObject.transform.FindChild("Light").GetComponent<Light>();
+		// light = gameObject.transform.FindChild("Light").GetComponent<Light>();
 	}
 	
 	public IEnumerator Fire()
 	{
 		Debug.Log("Mag firing");
-		light.enabled = true;
+		GetComponent<Light>().enabled = true;
 		isFiring = true;
 		RaycastHit hit;
 		
@@ -27,7 +27,7 @@ public class MAGLaser : MonoBehaviour {
 		}
 		
 		yield return new WaitForSeconds(1f);
-		light.enabled = false;
+		GetComponent<Light>().enabled = false;
 		isFiring = false;
 	}
 }
