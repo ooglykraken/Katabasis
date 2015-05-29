@@ -7,7 +7,7 @@ public class ConveyorBelt : MonoBehaviour {
 
 	public void OnCollisionStay(Collision c)
 	{
-		if (c.gameObject.tag == "Box")
+		if (c.gameObject.tag == "Box"|| c.gameObject.tag == "Player")
 		{
 			c.gameObject.GetComponent<Rigidbody>().AddForce(this.transform.up * speed * Time.deltaTime);
 		}
