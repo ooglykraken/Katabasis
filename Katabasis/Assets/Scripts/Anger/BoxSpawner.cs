@@ -2,18 +2,24 @@
 using System.Collections;
 
 public class BoxSpawner : MonoBehaviour {
+	
+	private int respawnCooldown = 60;
+	public int timeToRespawn;
+	
+	private GameObject box;
 
-	public GameObject Box;
-
-	// Use this for initialization
-	void Start () {
-		StartCoroutine(SpawnBox());
+	public void Awake(){
+		box = Resources.Load("Box", typeof(GameObject)) as GameObject;
 	}
 	
-	public IEnumerator SpawnBox()
-	{
-		GameObject.Instantiate(Box, this.transform.position, Quaternion.identity);
-		yield return new WaitForSeconds(1f);
-		StartCoroutine(SpawnBox());
+	public void Update(){
+		if(timeToRespawn > 0){
+			timeToRespawn--;
+		}
+		if(timeToRespawn == 0){
+			GameObject g = Instantiate(box as GameObject) as GameObject;
+			g.transform.position = transform.position;
+			timeToRespawn = respawnCooldown;
+		}
 	}
 }

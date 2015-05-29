@@ -4,48 +4,36 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	public float movementSpeed;
-	// public float lightLostPerFrame = .001f;
-	// private float startingLightIntensity;
 	private float startingLightRange;
 	
 	private int verticalDirection;
 	private int horizontalDirection;
 	
 	private int playerDirection;
-	// this is the player facing from 0-3 : 0 is facing up, 1 is left, 2 is down, 3 is right
 	
 	public bool hasFloorKey;
 	public bool isWalking;
 	private bool isDoorOpen;
-// <<<<<<< HEAD
 	public bool hasLantern;
 	public bool hasLens;
 	public bool hasLaser;
 	public bool hasAntilight;
 	private bool holdingBox;
-// =======
 	
-	//Added for SmokeEnemy 
 	private bool isSlowed;
 	private Transform lensTransform;
 	private Transform lanternTransform;
 	private Transform laserTransform;
-	//
-// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 	
 	public GameObject activeLight;
 	private GameObject lantern;
 	private GameObject lens;
 	private GameObject laser;
-// <<<<<<< HEAD
 	
 	private SpriteRenderer sprite;
 	
 	public Vector3 teleportLocation;
-// =======
-	// public bool hasLens;
-	// public bool hasLaser;
-// >>>>>>> b96716b3173aead13a198c842107b05758f21160
+
 	
 	public Sprite back;
 	public Sprite front;
@@ -116,7 +104,9 @@ public class Player : MonoBehaviour {
 			// Debug.Log("Im moving");
 		
 			Move();
-		} else {
+		} else if(floorCast == "LowerBoundary"){
+			Teleport();
+		}else {
 			GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
 		
@@ -150,9 +140,6 @@ public class Player : MonoBehaviour {
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
 		}
-// =======
-		// ChangeLights();
-// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 		
 		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
 		{
@@ -225,7 +212,7 @@ public class Player : MonoBehaviour {
 		
 		if (Physics.Raycast(transform.position, lantern.transform.forward, out hit, 1.5f))
 		{
-			  switch (hit.transform.gameObject.tag)
+			  switch (hit.transform.tag)
 			  {
 			  	case ("Box"):
 			  		GrabOrDropBox(hit.transform.gameObject);
@@ -237,11 +224,11 @@ public class Player : MonoBehaviour {
 			  		hit.transform.gameObject.GetComponent<NPC>().Talk();
 			  		break;
 			  	case ("Mirror"):
-			  		hit.transform.GetComponent<Mirror>().RotateMirror();
+			  		hit.transform.gameObject.GetComponent<Mirror>().RotateMirror();
 			  		break;
 			  	case ("MAGLaser"):
 			  		Debug.Log("activate mag");
-			  		StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
+			  		// StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
 			  		break;
 				default:
 					break;
@@ -321,7 +308,7 @@ public class Player : MonoBehaviour {
 		
 		Vector3 ray = transform.position + new Vector3(horizontalDirection *.35f, verticalDirection * .35f, -.2f);
 		if (Physics.Raycast(ray, Vector3.forward, out hit)){
-			if(hit.transform.parent.tag == "MovingPlatform"){
+			if(hit.transform.parent && hit.transform.parent.tag == "MovingPlatform"){
 				transform.parent = hit.transform.parent;
 			} else {
 				transform.parent = null;
@@ -451,7 +438,6 @@ public class Player : MonoBehaviour {
 			activeLight.gameObject.SetActive (true);
 		}
 	
-// >>>>>>> b96716b3173aead13a198c842107b05758f21160
 	}
 	
 	public void SpotLantern(){
