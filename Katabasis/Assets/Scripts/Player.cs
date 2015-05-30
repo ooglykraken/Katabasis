@@ -26,9 +26,9 @@ public class Player : MonoBehaviour {
 	private Transform laserTransform;
 	
 	public GameObject activeLight;
-	private GameObject lantern;
-	private GameObject lens;
-	private GameObject laser;
+	public GameObject lantern;
+	public GameObject lens;
+	public GameObject laser;
 	
 	private SpriteRenderer sprite;
 	
@@ -102,10 +102,11 @@ public class Player : MonoBehaviour {
 
 		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch" || floorCast == "Statue" || floorCast == "ConveyorBelt"){
 			// Debug.Log("Im moving");
-		
+		Debug.Log("Stuff is normal");
 			Move();
 		} else if(floorCast == "LowerBoundary"){
 			Teleport();
+			Debug.Log("Tele");
 		}else {
 			GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
@@ -121,7 +122,7 @@ public class Player : MonoBehaviour {
 	
 	public void Update(){
 		// Figure out how to jump between lights
-		if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring)
+		if (Input.GetKeyUp ("1") && hasLantern) // && !laser.GetComponent<RedLight>().isFiring)
 		{
 			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
 				PurpleLight.Instance().LensOff();
@@ -131,7 +132,7 @@ public class Player : MonoBehaviour {
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
+		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens) // && !laser.GetComponent<RedLight>().isFiring)
 		{
 			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
 				// PurpleLight.Instance().LensOff();
@@ -141,7 +142,7 @@ public class Player : MonoBehaviour {
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
+		if (Input.GetKeyUp ("3") && hasLaser) // && !laser.GetComponent<RedLight>().isFiring)
 		{
 			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
 				PurpleLight.Instance().LensOff();

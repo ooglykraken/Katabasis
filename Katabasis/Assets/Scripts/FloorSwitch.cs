@@ -5,6 +5,7 @@ public class FloorSwitch : MonoBehaviour {
 
 	public GameObject downTarget;
 	public GameObject upTarget;
+	public GameObject activatingObject;
 	
 	public string downFunction;
 	public string upFunction;
@@ -12,6 +13,10 @@ public class FloorSwitch : MonoBehaviour {
 	public string upArgument;
 	
 	public bool active;
+	
+	public void Update(){
+		
+	}
 	
 	public void OnTriggerStay(Collider c){
 		if(active){
@@ -22,6 +27,8 @@ public class FloorSwitch : MonoBehaviour {
 		{
 			
 			Debug.Log(c.name);
+			
+			activatingObject = c.transform.gameObject;
 			
 			transform.Find("Plate").localPosition = new Vector3(transform.Find("Plate").localPosition.x, transform.Find("Plate").localPosition.y, -.01f);
 			
@@ -44,7 +51,9 @@ public class FloorSwitch : MonoBehaviour {
 	}
 	
 	public void OnTriggerExit(Collider c){
-		
+		if(c.transform.gameObject != activatingObject){
+			return;
+		}
 		active = false;
 		
 		if (c.transform.name != "Lens")

@@ -34,7 +34,7 @@ public class WallSwitch : MonoBehaviour {
 		
 		isFlipped = true;
 		
-		transform.Find("Model").gameObject.GetComponent<Renderer>().material = leverDown;
+		transform.Find("Sprite").gameObject.GetComponent<Renderer>().material = leverDown;
 		
 		// Transform handle = transform.Find("Handle").GetComponent<Transform>();
 		// handle.eulerAngles	= new Vector3(transform.eulerAngles.x, 600f, transform.eulerAngles.z);

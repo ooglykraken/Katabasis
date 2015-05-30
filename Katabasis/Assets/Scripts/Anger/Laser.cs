@@ -35,7 +35,7 @@ public class Laser : MonoBehaviour {
 		RaycastHit hit;
 	
 		Vector3 ray = transform.position;
-		if (Physics.Raycast(ray, transform.forward, out hit, distance)) {
+		if (Physics.CapsuleCast(ray , ray, 1, transform.forward, out hit, distance)) {
 			if(hit.transform.tag == "Box" || hit.transform.tag == "Breakable"){
 				// Debug.Log("IT'S A BEAM!");
 				// laserTimer = laserDuration;

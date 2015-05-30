@@ -27,7 +27,7 @@ public class TextBox : MonoBehaviour {
 	}
 	
 	private void FollowPlayer(){
-		transform.position = player.transform.position + new Vector3(0f, 1f, 0f);
+		transform.position = player.transform.position + new Vector3(0f, 1.4f, 0f);
 	}
 	
 	public void UpdateText(string s){
