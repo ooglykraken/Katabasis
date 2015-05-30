@@ -3,7 +3,10 @@ using System.Collections;
 
 public class RedLight : MonoBehaviour {
 
+<<<<<<< HEAD
+=======
 // <<<<<<< HEAD
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	public Light redLight;
 	public bool isFiring;
 	
@@ -30,13 +33,20 @@ public class RedLight : MonoBehaviour {
 			{
 				Destroy(hit.transform.gameObject);
 			}
+			if(hit.transform.tag == "DepressionMonster")
+			{
+				hit.transform.gameObject.GetComponent<DepMonsterAI>().Respawn();
+			}
 		}
 		
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(.5f);
 		
 		redLight.enabled = false;
-		isFiring = false;
 		
+<<<<<<< HEAD
+		yield return new WaitForSeconds(.5f);
+		isFiring = false;
+=======
 	}
 	
 // =======
@@ -48,21 +58,11 @@ public class RedLight : MonoBehaviour {
 	public void CheckForBreakableWalls()
 	{
 		RaycastHit hit;
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 		
-		Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.lossyScale.z * .5f);
-		if (Physics.Raycast(ray, transform.up, out hit))
-		{
-			Debug.Log (hit.transform.gameObject.name);
-			if (hit.transform.tag == "Breakable")
-			{
-				//hit.transform.gameObject.GetComponent<BreakableWall>().Break();
-			}
-			
-			if (hit.transform.tag == "Puzzle Piece")
-			{
-				//do something
-			}
-		}
 	}
+<<<<<<< HEAD
+=======
 // >>>>>>> b96716b3173aead13a198c842107b05758f21160
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 }

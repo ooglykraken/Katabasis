@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TextBox : MonoBehaviour {
 
-	private int timeToKillText = 150;
+	private int timeToKillText = 300;
 	private int timer;
 
 	public GameObject player;

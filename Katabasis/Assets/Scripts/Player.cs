@@ -9,31 +9,53 @@ public class Player : MonoBehaviour {
 	private int verticalDirection;
 	private int horizontalDirection;
 	
+	private Transform position;
+	
+	private Vector3 playerForward;
 	private int playerDirection;
 	
 	public bool hasFloorKey;
 	public bool isWalking;
 	private bool isDoorOpen;
+<<<<<<< HEAD
+	
+=======
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	public bool hasLantern;
 	public bool hasLens;
 	public bool hasLaser;
-	public bool hasAntilight;
 	private bool holdingBox;
+<<<<<<< HEAD
+=======
 	
 	private bool isSlowed;
 	private Transform lensTransform;
 	private Transform lanternTransform;
 	private Transform laserTransform;
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	
 	public GameObject activeLight;
+<<<<<<< HEAD
 	public GameObject lantern;
 	public GameObject lens;
 	public GameObject laser;
+=======
+	private GameObject lantern;
+	private GameObject lens;
+	private GameObject laser;
+<<<<<<< HEAD
+
+=======
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
+>>>>>>> 7800120ae3155741820b65d9c1ccab974808f1b1
 	
 	private SpriteRenderer sprite;
 	
 	public Vector3 teleportLocation;
+<<<<<<< HEAD
+=======
 
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 	
 	public Sprite back;
 	public Sprite front;
@@ -47,14 +69,19 @@ public class Player : MonoBehaviour {
 		laser = transform.Find ("Laser").gameObject;
 		lantern = transform.Find ("Lantern").gameObject;
 		sprite = transform.Find ("Sprite").gameObject.GetComponent<SpriteRenderer>();
+<<<<<<< HEAD
+=======
 		
 		// laserTransform = transform.Find ("Laser");
 		// laser = laserTransform.gameObject;
 		
 		activeLight = lantern;
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 
 		startingLightRange = lantern.GetComponent<Light>().range;
 		// startingLightIntensity = lantern.GetComponent<Light>().intensity;
+		
+		position = transform;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -117,6 +144,12 @@ public class Player : MonoBehaviour {
 			// lantern.GetComponent<Light>().range = startingLightRange;
 		// }
 		
+<<<<<<< HEAD
+	}
+	
+	public void Update(){
+		ChangeLights();
+=======
 // <<<<<<< HEAD
 	}
 	
@@ -152,6 +185,7 @@ public class Player : MonoBehaviour {
 			activeLight = laser;
 			activeLight.gameObject.SetActive (true);
 		}
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 
 		if (Input.GetKeyUp ("e"))
 		{
@@ -190,7 +224,7 @@ public class Player : MonoBehaviour {
 		}
 	
 		GetComponent<Rigidbody>().velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
-		GetComponent<Rigidbody>().velocity = Vector3.Lerp(GetComponent<Rigidbody>().velocity, Vector3.zero, Time.deltaTime);
+		//GetComponent<Rigidbody>().velocity = Vector3.Lerp(GetComponent<Rigidbody>().velocity, Vector3.zero, Time.deltaTime);
 		
 		if(horizontalDirection == 0 && verticalDirection == 0){
 			gameObject.GetComponent<AudioSource>().Stop();
@@ -205,20 +239,22 @@ public class Player : MonoBehaviour {
 		sprite.enabled = !isWalking;
 		transform.Find("Animator").gameObject.SetActive(isWalking);
 		transform.Find("Animator").gameObject.GetComponent<Animator>().SetBool("isWalking", isWalking);
+		
+		if (holdingBox)
+		{
+			transform.FindChild ("Box").GetComponent<Rigidbody>().velocity = new Vector3(horizontalDirection * movementSpeed, verticalDirection * movementSpeed, 0f);
+		}
 	}
 	
 	private void Activate()
 	{
 		RaycastHit hit;
 		
-		if (Physics.Raycast(transform.position, lantern.transform.forward, out hit, 1.5f))
+		if (Physics.Raycast(transform.position, playerForward, out hit, 1.5f))
 		{
 			  switch (hit.transform.tag)
 			  {
 			  	case ("Box"):
-			  		GrabOrDropBox(hit.transform.gameObject);
-			  		break;
-			  	case ("Cube"):
 			  		GrabOrDropBox(hit.transform.gameObject);
 			  		break;
 			  	case ("NPC"):
@@ -228,8 +264,15 @@ public class Player : MonoBehaviour {
 			  		hit.transform.gameObject.GetComponent<Mirror>().RotateMirror();
 			  		break;
 			  	case ("MAGLaser"):
+<<<<<<< HEAD
+			  		StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
+=======
 			  		Debug.Log("activate mag");
 			  		// StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
+			  		break;
+			  	case ("LightBeacon"):
+			  		hit.transform.gameObject.GetComponent<LightBeacon>().TakeLight();
 			  		break;
 				default:
 					break;
@@ -291,7 +334,6 @@ public class Player : MonoBehaviour {
 		Vector3 ray  = new Vector3(transform.position.x, transform.position.y, transform.lossyScale.z * .5f);
 		if (Physics.Raycast(ray, transform.up, out hit)) {
 			if (Vector3.Distance(transform.position, hit.point) <= distance && (hit.transform.tag == "Wall" || hit.transform.tag == "Door")){
-				Debug.Log(hit.transform.tag);
 				lantern.GetComponent<Light>().range = Vector3.Distance(transform.position, hit.point) + 2f;
 				return true;
 			}
@@ -338,25 +380,25 @@ public class Player : MonoBehaviour {
 		switch(direction){
 			case "up":
 				newFacing = new Vector3(270f, 90f, 0f);
-				
+				playerForward = new Vector3(0f, 1f, 0f);
 				sprite.sprite = back;
 				playerDirection = 2;
 				break;
 			case "down":
 				newFacing = new Vector3(90f, 90f, 0f);
-				
+				playerForward = new Vector3(0f, -1f, 0f);
 				sprite.sprite = front;
 				playerDirection = 0;		
 				break;
 			case "left":
 				newFacing = new Vector3(180f, 90f, 0f);
-				
+				playerForward = new Vector3(-1f, 0f, 0f);
 				sprite.sprite = left;
 				playerDirection = 1;
 				break;
 			case "right":
 				newFacing = new Vector3(0f, 90f, 0f);
-				
+				playerForward = new Vector3(1f, 0f, 0f);
 				sprite.sprite = right;
 				playerDirection = 3;
 				break;
@@ -382,7 +424,6 @@ public class Player : MonoBehaviour {
 			default:
 				break;
 		}
-		
 		lantern.transform.eulerAngles = newFacing;
 		laser.transform.eulerAngles = newFacing;
 	}
@@ -414,26 +455,41 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void ChangeLights(){
+<<<<<<< HEAD
+		// Handle switching between lights
+		
+		if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring)
+=======
 // <<<<<<< HEAD
 		// Handle switching between lights
 		
 // =======
 		if (Input.GetKeyDown ("1"))
+>>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 		{
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
 			activeLight.gameObject.SetActive (false);
 			activeLight = lantern;
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		if (Input.GetKeyDown ("2") && hasLens == true)
+		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
 		{
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
 			activeLight.gameObject.SetActive (false);
 			activeLight = lens;
 			activeLight.gameObject.SetActive (true);
 		}
 		
-		if (Input.GetKeyDown ("3") && hasLaser == true)
+		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
 		{
+			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				PurpleLight.Instance().LensOff();
+			}
 			activeLight.gameObject.SetActive (false);
 			activeLight = laser;
 			activeLight.gameObject.SetActive (true);
