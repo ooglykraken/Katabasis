@@ -8,7 +8,7 @@ public class MovableBlock : MonoBehaviour {
 	public Vector3 startPosition;
 	public Vector3 verticalOffset = new Vector3(0f, 0f, 3f);
 	
-	public bool noGravity;
+	public bool grounded;
 	
 	public void Awake(){
 		// startPosition = transform.position;
@@ -22,7 +22,7 @@ public class MovableBlock : MonoBehaviour {
 		CheckFloor();
 		
 		GetComponent<Rigidbody>().velocity = Vector3.Lerp(GetComponent<Rigidbody>().velocity, Vector3.zero, Time.deltaTime * 6f);
-		if(noGravity){
+		if(grounded){
 			GetComponent<Rigidbody>().velocity += new Vector3(0f, 0f, .2f);
 		} else {
 			GetComponent<Rigidbody>().velocity += new Vector3(0f, 0f, gravity);
@@ -37,9 +37,8 @@ public class MovableBlock : MonoBehaviour {
 		Vector3 ray = transform.position;
 		if (Physics.Raycast(ray, Vector3.forward, out hit)){
 			if(hit.transform.tag == "Floor"){
-				
 				if(hit.distance >= .1f){
-					noGravity = true;
+					grounded = true;
 				}
 			}
 		}

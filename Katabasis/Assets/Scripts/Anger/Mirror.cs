@@ -3,16 +3,22 @@ using System.Collections;
 
 public class Mirror : MonoBehaviour {
 
-	private Light light;
+	private Light lightBeam;
+	
 	private bool isFiring;
+	
 	void Awake()
 	{
-		light = gameObject.transform.FindChild("Light").GetComponent<Light>();
+		lightBeam = gameObject.transform.FindChild("lightBeam").GetComponent<Light>();
 	}
 
-	public IEnumerator ReflectRaycast()
+	public void ReflectRaycast()
 	{
-		light.enabled = true;
+		if(isFiring){
+			return;
+		}
+		
+		lightBeam.enabled = true;
 		isFiring = true;
 		RaycastHit hit;
 		
@@ -20,7 +26,7 @@ public class Mirror : MonoBehaviour {
 		{
 			if (hit.transform.tag == "Mirror")
 			{
-				StartCoroutine(hit.transform.gameObject.GetComponent<Mirror>().ReflectRaycast());
+				hit.transform.gameObject.GetComponent<Mirror>().ReflectRaycast();
 			}
 			
 			if (hit.transform.name == "BlastDoor")
@@ -29,8 +35,7 @@ public class Mirror : MonoBehaviour {
 			}
 		}
 		
-		yield return new WaitForSeconds(1f);
-		light.enabled = false;
+		lightBeam.enabled = false;
 		isFiring = false;
 	}
 	

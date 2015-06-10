@@ -2,8 +2,9 @@
 using System.Collections;
 
 public class WallSwitch : MonoBehaviour {
-	public Material leverUp;
-	public Material leverDown;
+	
+	public Sprite leverUp;
+	public Sprite leverDown;
 	
 	public GameObject target;
 	
@@ -34,7 +35,7 @@ public class WallSwitch : MonoBehaviour {
 		
 		isFlipped = true;
 		
-		transform.Find("Sprite").gameObject.GetComponent<Renderer>().material = leverDown;
+		transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>().sprite = leverDown;
 		
 		// Transform handle = transform.Find("Handle").GetComponent<Transform>();
 		// handle.eulerAngles	= new Vector3(transform.eulerAngles.x, 600f, transform.eulerAngles.z);
@@ -67,7 +68,7 @@ public class WallSwitch : MonoBehaviour {
 		GameObject newThing = Instantiate(Resources.Load(s, typeof(GameObject)) as GameObject) as GameObject;
 		switch(Gameplay.Instance().currentLevel){
 			case 0:
-				newThing.transform.position = new Vector3(-6f, 43f, -8f);
+				newThing.transform.position = new Vector3(-6f, 43f, -2f);
 				break;
 			case 2:
 				newThing.transform.parent = GameObject.Find("FloorTiles").transform;

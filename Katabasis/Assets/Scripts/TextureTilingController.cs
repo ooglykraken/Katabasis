@@ -42,6 +42,6 @@ public class TextureTilingController : MonoBehaviour {
         // Figure out texture-to-mesh width based on user set texture-to-mesh height
         float textureToMeshX = ((float)this.texture.width/this.texture.height)*this.textureToMeshY;
 
-        gameObject.GetComponent<Renderer>().material.mainTextureScale = new Vector2(planeSizeX*gameObject.transform.lossyScale.x/textureToMeshX, planeSizeY*gameObject.transform.lossyScale.y/textureToMeshY);
+        gameObject.GetComponent<Renderer>().sharedMaterial.mainTextureScale = new Vector2(planeSizeX*gameObject.transform.lossyScale.x/textureToMeshX, planeSizeY*gameObject.transform.lossyScale.y/textureToMeshY);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CreditRoll : MonoBehaviour {
 
-	private GameObject background;
+	// private GameObject background;
 	
 	private float length;
 
@@ -14,7 +14,7 @@ public class CreditRoll : MonoBehaviour {
 	private float timeToStart = 200f;
 
 	public void Awake(){
-		background = transform.Find ("Background").gameObject;
+		// background = transform.Find ("Background").gameObject;
 		//length = background.gameObject.GetComponent<Renderer>().bounds.extents.y;
 		
 		//mainCamera = GameObject.Find ("Main Camera").GetComponent<Camera>();

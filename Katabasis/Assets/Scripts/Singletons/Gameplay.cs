@@ -43,12 +43,15 @@ public class Gameplay : MonoBehaviour {
 			popupOpen = true;
 			// Debug.Log("menu time");
 			Popup p = Instantiate(Resources.Load("UI/In-Game Menu", typeof(Popup)) as Popup) as Popup; 
+			
+			// I do this so I don't get the warning about p not being used upon compiling
+			p.gameObject.SetActive(true);
 		}
 		
 		if(popupOpen){
-			GameObject.Find("Player").GetComponent<Player>().enabled = false;
+			player.GetComponent<Player>().enabled = false;
 		} else {
-			GameObject.Find("Player").GetComponent<Player>().enabled = true;
+			player.GetComponent<Player>().enabled = true;
 		}
 		
 		// if(!isLightOn){
@@ -72,7 +75,7 @@ public class Gameplay : MonoBehaviour {
 		// spawnLocation = null;
 		// Handle jumping to the next stage.
 		if(Application.loadedLevel != Gameplay.Instance().finalLevel){
-			
+			FadeToBlack.Instance().FadeIn();
 			Application.LoadLevel(Application.loadedLevel + 1);
 			LightsOff();
 			

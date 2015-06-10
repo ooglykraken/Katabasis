@@ -16,47 +16,27 @@ public class Player : MonoBehaviour {
 	
 	public bool hasFloorKey;
 	public bool isWalking;
-	private bool isDoorOpen;
-<<<<<<< HEAD
-	
-=======
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
+	// private bool isDoorOpen;
+
 	public bool hasLantern;
 	public bool hasLens;
 	public bool hasLaser;
 	private bool holdingBox;
-<<<<<<< HEAD
-=======
 	
 	private bool isSlowed;
 	private Transform lensTransform;
 	private Transform lanternTransform;
 	private Transform laserTransform;
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
-	
+
 	public GameObject activeLight;
-<<<<<<< HEAD
 	public GameObject lantern;
 	public GameObject lens;
 	public GameObject laser;
-=======
-	private GameObject lantern;
-	private GameObject lens;
-	private GameObject laser;
-<<<<<<< HEAD
 
-=======
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
->>>>>>> 7800120ae3155741820b65d9c1ccab974808f1b1
-	
 	private SpriteRenderer sprite;
 	
 	public Vector3 teleportLocation;
-<<<<<<< HEAD
-=======
 
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
-	
 	public Sprite back;
 	public Sprite front;
 	public Sprite left;
@@ -69,14 +49,11 @@ public class Player : MonoBehaviour {
 		laser = transform.Find ("Laser").gameObject;
 		lantern = transform.Find ("Lantern").gameObject;
 		sprite = transform.Find ("Sprite").gameObject.GetComponent<SpriteRenderer>();
-<<<<<<< HEAD
-=======
 		
 		// laserTransform = transform.Find ("Laser");
 		// laser = laserTransform.gameObject;
 		
 		activeLight = lantern;
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 
 		startingLightRange = lantern.GetComponent<Light>().range;
 		// startingLightIntensity = lantern.GetComponent<Light>().intensity;
@@ -129,7 +106,7 @@ public class Player : MonoBehaviour {
 
 		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch" || floorCast == "Statue" || floorCast == "ConveyorBelt"){
 			// Debug.Log("Im moving");
-		Debug.Log("Stuff is normal");
+		// Debug.Log("Stuff is normal");
 			Move();
 		} else if(floorCast == "LowerBoundary"){
 			Teleport();
@@ -143,14 +120,6 @@ public class Player : MonoBehaviour {
 		// if(!CheckForWalls() ){
 			// lantern.GetComponent<Light>().range = startingLightRange;
 		// }
-		
-<<<<<<< HEAD
-	}
-	
-	public void Update(){
-		ChangeLights();
-=======
-// <<<<<<< HEAD
 	}
 	
 	public void Update(){
@@ -185,7 +154,6 @@ public class Player : MonoBehaviour {
 			activeLight = laser;
 			activeLight.gameObject.SetActive (true);
 		}
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 
 		if (Input.GetKeyUp ("e"))
 		{
@@ -264,12 +232,10 @@ public class Player : MonoBehaviour {
 			  		hit.transform.gameObject.GetComponent<Mirror>().RotateMirror();
 			  		break;
 			  	case ("MAGLaser"):
-<<<<<<< HEAD
-			  		StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
-=======
-			  		Debug.Log("activate mag");
+					
+			  		MAGLaser.Instance().Activate();
+			  		// Debug.Log("activate mag");
 			  		// StartCoroutine(hit.transform.GetComponent<MAGLaser>().Fire());
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
 			  		break;
 			  	case ("LightBeacon"):
 			  		hit.transform.gameObject.GetComponent<LightBeacon>().TakeLight();
@@ -317,7 +283,7 @@ public class Player : MonoBehaviour {
 		
 		Gameplay.Instance().NextLevel();
 		
-		isDoorOpen = false;
+		// isDoorOpen = false;
 		hasFloorKey = false;
 	}
 	
@@ -430,7 +396,7 @@ public class Player : MonoBehaviour {
 	
 	private void CameraFollow(){
 		float cameraOffset = .6f;
-		float cameraTiltAdjustment = -3;
+		// float cameraTiltAdjustment = -3;
 		Camera main = Camera.main;
 
 		if(transform.position.x  >  main.transform.position.x + cameraOffset){
@@ -454,48 +420,43 @@ public class Player : MonoBehaviour {
 		// GameObject.Find("LanternPickup").GetComponent<Light>().enabled = false;
 	}
 	
-	public void ChangeLights(){
-<<<<<<< HEAD
+	// public void ChangeLights(){
 		// Handle switching between lights
 		
-		if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring)
-=======
-// <<<<<<< HEAD
-		// Handle switching between lights
+		// if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring){
+		// }
+
+		// if (Input.GetKeyDown ("1"))
+		// {
+			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				// PurpleLight.Instance().LensOff();
+			// }
+			// activeLight.gameObject.SetActive (false);
+			// activeLight = lantern;
+			// activeLight.gameObject.SetActive (true);
+		// }
 		
-// =======
-		if (Input.GetKeyDown ("1"))
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
-		{
-			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				PurpleLight.Instance().LensOff();
-			}
-			activeLight.gameObject.SetActive (false);
-			activeLight = lantern;
-			activeLight.gameObject.SetActive (true);
-		}
+		// if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
+		// {
+			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				// PurpleLight.Instance().LensOff();
+			// }
+			// activeLight.gameObject.SetActive (false);
+			// activeLight = lens;
+			// activeLight.gameObject.SetActive (true);
+		// }
 		
-		if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
-		{
-			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				PurpleLight.Instance().LensOff();
-			}
-			activeLight.gameObject.SetActive (false);
-			activeLight = lens;
-			activeLight.gameObject.SetActive (true);
-		}
-		
-		if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
-		{
-			if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				PurpleLight.Instance().LensOff();
-			}
-			activeLight.gameObject.SetActive (false);
-			activeLight = laser;
-			activeLight.gameObject.SetActive (true);
-		}
+		// if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
+		// {
+			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
+				// PurpleLight.Instance().LensOff();
+			// }
+			// activeLight.gameObject.SetActive (false);
+			// activeLight = laser;
+			// activeLight.gameObject.SetActive (true);
+		// }
 	
-	}
+	// }
 	
 	public void SpotLantern(){
 		TextBox.Instance().UpdateText("There is a lantern on the floor.");

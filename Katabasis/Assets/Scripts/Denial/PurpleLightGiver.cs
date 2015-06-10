@@ -12,16 +12,12 @@ public class PurpleLightGiver : MonoBehaviour {
 			Debug.Log(c.gameObject.name);
 			
 			c.gameObject.GetComponent<Player>().hasLens = true;
-<<<<<<< HEAD
+
 			// GameObject.Find("Player").
 			TextBox.Instance().UpdateText("You now have the Purple Light on 2. It will allow you to see what really is.");
-=======
-// <<<<<<< HEAD
-			// GameObject.Find("Player").
-// =======
+
 			TextBox.Instance().UpdateText("You now have the Purple Light on 2. It will allow you to see what really is.");
-// >>>>>>> b96716b3173aead13a198c842107b05758f21160
->>>>>>> 7c08b8ae9bbbaf64abfc57918a0420738bf6fcab
+
 		}
 	}
 }
