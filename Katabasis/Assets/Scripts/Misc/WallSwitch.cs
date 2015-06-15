@@ -65,7 +65,7 @@ public class WallSwitch : MonoBehaviour {
 	
 	public void Create(string s){
 		Debug.Log(s);
-		GameObject newThing = Instantiate(Resources.Load(s, typeof(GameObject)) as GameObject) as GameObject;
+		GameObject newThing = Instantiate(Resources.Load("misc/" + s, typeof(GameObject)) as GameObject) as GameObject;
 		switch(Gameplay.Instance().currentLevel){
 			case 0:
 				newThing.transform.position = new Vector3(-6f, 43f, -2f);
@@ -78,6 +78,10 @@ public class WallSwitch : MonoBehaviour {
 			default:
 				newThing.transform.position = new Vector3(-6f, 43f, -1f);
 				break;
+		}
+		
+		if(newThing.transform.Find("Sprite")){
+			SpriteOrderer.Instance().allSpriteRenderers.Add(newThing.transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
 		}
 	}
 }

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class SpriteOrderer : MonoBehaviour {
 	
-	private int backLayer = -1;
-	private int middleLayer = 0;
-	private int frontLayer = 1;
+	private static int backLayer = 0;
+	private static int playerLayer = 1;
+	private static int frontLayer = 2;
 	
 	private GameObject player;
 	
-	private List<SpriteRenderer> allSpriteRenderers = new List<SpriteRenderer>();
+	public List<SpriteRenderer> allSpriteRenderers = new List<SpriteRenderer>();
 	
 	public void Awake(){
 		player = GameObject.Find("Player");
@@ -38,9 +38,19 @@ public class SpriteOrderer : MonoBehaviour {
 				} else if(player.transform.position.y < s.transform.parent.position.y){
 					s.sortingOrder = backLayer;
 				} else {
-					s.sortingOrder = middleLayer;
+					s.sortingOrder = playerLayer;
 				}
 			}
 		}
+	}
+	
+	private static SpriteOrderer instance;
+	
+	public static SpriteOrderer Instance(){
+		if(instance == null){
+			instance = GameObject.Find("SpriteOrderer").GetComponent<SpriteOrderer>();
+		}
+		
+		return instance;
 	}
 }

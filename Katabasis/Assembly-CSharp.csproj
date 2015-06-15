@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>D:/My Apps/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>D:/My Apps/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -54,8 +54,8 @@
      <Compile Include="Assets\Scripts\Anger\MAGLaser.cs" />
      <Compile Include="Assets\Scripts\Anger\Mirror.cs" />
      <Compile Include="Assets\Scripts\Anger\RedLightGiver.cs" />
+     <Compile Include="Assets\Scripts\Bargaining\MineralBlock.cs" />
      <Compile Include="Assets\Scripts\Bargaining\NPC.cs" />
-     <Compile Include="Assets\Scripts\CreditRoll.cs" />
      <Compile Include="Assets\Scripts\Denial\MovingPlatformCircle.cs" />
      <Compile Include="Assets\Scripts\Denial\MultiFloorSwitch.cs" />
      <Compile Include="Assets\Scripts\Denial\PurpleLight.cs" />
@@ -64,40 +64,41 @@
      <Compile Include="Assets\Scripts\Depression\DepMonsterAI.cs" />
      <Compile Include="Assets\Scripts\Depression\LightBeacon.cs" />
      <Compile Include="Assets\Scripts\Depression\SpawnandBeaconControl.cs" />
+     <Compile Include="Assets\Scripts\Depression\ToroidalWall.cs" />
      <Compile Include="Assets\Scripts\Depression\TorriodalWall.cs" />
-     <Compile Include="Assets\Scripts\Door.cs" />
-     <Compile Include="Assets\Scripts\Fan.cs" />
-     <Compile Include="Assets\Scripts\FloorSwitch.cs" />
-     <Compile Include="Assets\Scripts\FloorSwitches.cs" />
-     <Compile Include="Assets\Scripts\InvisibleFloor.cs" />
-     <Compile Include="Assets\Scripts\InvisibleFloorSwitch.cs" />
-     <Compile Include="Assets\Scripts\Key.cs" />
-     <Compile Include="Assets\Scripts\MovableBlock.cs" />
-     <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\Misc\Door.cs" />
+     <Compile Include="Assets\Scripts\Misc\Fan.cs" />
+     <Compile Include="Assets\Scripts\Misc\FloorSwitch.cs" />
+     <Compile Include="Assets\Scripts\Misc\FloorSwitches.cs" />
+     <Compile Include="Assets\Scripts\Misc\InvisibleFloor.cs" />
+     <Compile Include="Assets\Scripts\Misc\InvisibleFloorSwitch.cs" />
+     <Compile Include="Assets\Scripts\Misc\Key.cs" />
+     <Compile Include="Assets\Scripts\Misc\MovableBlock.cs" />
+     <Compile Include="Assets\Scripts\Misc\Player.cs" />
+     <Compile Include="Assets\Scripts\Misc\WallSwitch.cs" />
      <Compile Include="Assets\Scripts\Singletons\Fader.cs" />
      <Compile Include="Assets\Scripts\Singletons\Gameplay.cs" />
      <Compile Include="Assets\Scripts\Singletons\Settings.cs" />
      <Compile Include="Assets\Scripts\Singletons\Stairs.cs" />
      <Compile Include="Assets\Scripts\Singletons\TextBox.cs" />
-     <Compile Include="Assets\Scripts\TellControls.cs" />
      <Compile Include="Assets\Scripts\TextureTilingController.cs" />
      <Compile Include="Assets\Scripts\UI\Button.cs" />
+     <Compile Include="Assets\Scripts\UI\CreditRoll.cs" />
      <Compile Include="Assets\Scripts\UI\FadeToBlack.cs" />
      <Compile Include="Assets\Scripts\UI\MainMenu.cs" />
      <Compile Include="Assets\Scripts\UI\Popup.cs" />
      <Compile Include="Assets\Scripts\UI\PopupButton.cs" />
      <Compile Include="Assets\Scripts\UI\Slider.cs" />
      <Compile Include="Assets\Scripts\UI\SpriteOrderer.cs" />
-     <Compile Include="Assets\Scripts\WallSwitch.cs" />
      <None Include="Assets\Shaders\Tiles.shader" />
      <None Include="Assets\Resources\xmlFloors.xml" />
      <None Include="Assets\Shaders\Sprites-Diffuse-Custom.shader" />
      <None Include="Assets\Shaders\UnlitAlpha.shader" />
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>D:/My Apps/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.iOS.Extensions.Xcode">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iossupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+ <HintPath>D:/My Apps/Unity/Editor/Data/PlaybackEngines/iossupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

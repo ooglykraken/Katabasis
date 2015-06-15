@@ -18,8 +18,8 @@ public class Door : MonoBehaviour {
 	
 		GetComponent<AudioSource>().Play();
 	
-		Renderer model = GetComponent<Renderer>();
-		Collider collider = GetComponent<Collider>();
+		Renderer model = transform.Find("Sprite").gameObject.GetComponent<Renderer>();
+		Collider collider = transform.Find("Collider").gameObject.GetComponent<Collider>();
 		
 		model.enabled = false;
 		collider.enabled = false;
@@ -68,8 +68,8 @@ public class Door : MonoBehaviour {
 			// t.renderer.enabled = false;
 		// }
 	
-		Renderer model = GetComponent<Renderer>();
-		Collider collider = GetComponent<Collider>();
+		Renderer model = transform.Find("Sprite").gameObject.GetComponent<Renderer>();
+		Collider collider = transform.Find("Collider").gameObject.GetComponent<Collider>();
 		
 		collider.enabled = true;
 		model.enabled = true;

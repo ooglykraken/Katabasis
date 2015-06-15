@@ -9,7 +9,7 @@ public class Mirror : MonoBehaviour {
 	
 	void Awake()
 	{
-		lightBeam = gameObject.transform.FindChild("lightBeam").GetComponent<Light>();
+		lightBeam = gameObject.transform.FindChild("LightBeam").GetComponent<Light>();
 	}
 
 	public void ReflectRaycast()

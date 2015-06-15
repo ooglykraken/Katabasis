@@ -13,18 +13,18 @@ public class FadeToBlack : MonoBehaviour {
 	public void Awake(){
 		mesh = GetComponent<MeshRenderer>();
 		FadeOut();
-		Debug.Log("Fading.....");
+		// Debug.Log("Fading.....");
 	}
 	
 	public void Update(){
 		if(fadingOut){
 			if(mesh.material.color.a > 0f){
-				Debug.Log("fading out");
+				// Debug.Log("fading out");
 				mesh.material.color = new Color(mesh.material.color.r, mesh.material.color.g, mesh.material.color.b, mesh.material.color.a - fadeAdjust);
 			}
 		} else if(fadingIn){
 			if(mesh.material.color.a < 1.0f){
-				Debug.Log("fading in");
+				// Debug.Log("fading in");
 				mesh.material.color = new Color(mesh.material.color.r, mesh.material.color.g, mesh.material.color.b, mesh.material.color.a + fadeAdjust);
 			}
 		} else {

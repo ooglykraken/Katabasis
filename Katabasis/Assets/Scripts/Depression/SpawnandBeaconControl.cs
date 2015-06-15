@@ -17,17 +17,21 @@ public class SpawnandBeaconControl : MonoBehaviour {
 	public GameObject teleLocation;
 	
 	
+	public bool hasTeleported;
+	
 	void Awake()
 	{
+		hasTeleported = false;
 		beacons = new List<GameObject>();
 		monsters = new List<GameObject>();
 	}
 	
 	void FixedUpdate()
 	{
-		if(beacons.Count == 7)
+		if(!hasTeleported && beacons.Count == 7)
 		{
 			player.transform.position = teleLocation.transform.position;
+			hasTeleported = true;
 		}
 	}
 	
@@ -48,6 +52,9 @@ public class SpawnandBeaconControl : MonoBehaviour {
 		newMonster = (GameObject) Instantiate (monster, newPos, monster.transform.rotation);
 		newMonster.GetComponent<DepMonsterAI>().player = player;
 		newMonster.GetComponent<DepMonsterAI>().spawnControl = gameObject;
+		monsters.Add(newMonster);
+		
+		SpriteOrderer.Instance().allSpriteRenderers.Add(newMonster.transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
 	}
 	
 	public void RemoveBeacon()

@@ -10,6 +10,10 @@ public class ConveyorBelt : MonoBehaviour {
 	public bool isHorizontal;
 	public bool isReverse; // negative on the cartesian, given that y and x are positive
 	
+	public void Awake(){
+ 
+	}
+	
 	public void Update(){
 			if(isHorizontal){
 				direction = transform.right;
@@ -24,12 +28,12 @@ public class ConveyorBelt : MonoBehaviour {
 	
 	public void OnCollisionStay(Collision c)
 	{
-		if (c.gameObject.tag == "Box" || c.gameObject.tag == "Player")
+		// Debug.Log(c.transform.parent.name);
+		if (c.gameObject.tag == "Box" || c.transform.tag == "Player")
 		{
-			
-			Debug.Log(c.gameObject.name);
-
-			c.gameObject.GetComponent<Rigidbody>().AddForce(direction * speed * Time.deltaTime);
+			Rigidbody rigidbody = c.gameObject.GetComponent<Rigidbody>();
+		
+			rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, (direction * speed), Time.deltaTime);
 		}	
 	}
 }

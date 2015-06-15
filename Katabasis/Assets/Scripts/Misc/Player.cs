@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 	private Transform position;
 	
 	private Vector3 playerForward;
-	private int playerDirection;
+	public int playerDirection;
 	
 	public bool hasFloorKey;
 	public bool isWalking;
@@ -22,6 +22,11 @@ public class Player : MonoBehaviour {
 	public bool hasLens;
 	public bool hasLaser;
 	private bool holdingBox;
+	
+	public bool hasDiamond;
+	public bool hasSapphire;
+	public bool hasEmerald;
+	public bool hasGold;
 	
 	private bool isSlowed;
 	private Transform lensTransform;
@@ -42,6 +47,8 @@ public class Player : MonoBehaviour {
 	public Sprite left;
 	public Sprite right;
 	
+	private Animator playerAnimator;
+	
 	public void Awake(){
 		hasFloorKey = false;
 		
@@ -57,6 +64,8 @@ public class Player : MonoBehaviour {
 
 		startingLightRange = lantern.GetComponent<Light>().range;
 		// startingLightIntensity = lantern.GetComponent<Light>().intensity;
+		
+		playerAnimator = transform.Find("Animator").gameObject.GetComponent<Animator>();
 		
 		position = transform;
 	}
@@ -158,10 +167,7 @@ public class Player : MonoBehaviour {
 		if (Input.GetKeyUp ("e"))
 		{
 			Activate();
-		}
-
-		Animator playerAnimator = transform.Find("Animator").gameObject.GetComponent<Animator>();
-		playerAnimator.SetInteger("Direction", playerDirection);
+		}	
 		
 		if(Gameplay.Instance().spawnLocation != null){
 			teleportLocation = Gameplay.Instance().spawnLocation.position;
@@ -205,8 +211,12 @@ public class Player : MonoBehaviour {
 		}
 		
 		sprite.enabled = !isWalking;
-		transform.Find("Animator").gameObject.SetActive(isWalking);
-		transform.Find("Animator").gameObject.GetComponent<Animator>().SetBool("isWalking", isWalking);
+		playerAnimator.gameObject.SetActive(isWalking);
+		
+		if(isWalking){
+			playerAnimator.SetInteger("Direction", playerDirection);
+			playerAnimator.SetBool("isWalking", isWalking);
+		}
 		
 		if (holdingBox)
 		{
@@ -217,8 +227,25 @@ public class Player : MonoBehaviour {
 	private void Activate()
 	{
 		RaycastHit hit;
+		Vector3 ray = Vector3.zero;
+		switch(playerDirection){
+			case(0):
+				ray = -transform.up;
+				break;
+			case(1):
+				ray = -transform.right;
+				break;
+			case(2):
+				ray = transform.up;
+				break;
+			case(3):
+				ray = transform.right;
+				break;
+			default:
+				break;
+		}
 		
-		if (Physics.Raycast(transform.position, playerForward, out hit, 1.5f))
+		if (Physics.Raycast(transform.position - ray/2f, ray, out hit, 1.5f))
 		{
 			  switch (hit.transform.tag)
 			  {
@@ -226,6 +253,7 @@ public class Player : MonoBehaviour {
 			  		GrabOrDropBox(hit.transform.gameObject);
 			  		break;
 			  	case ("NPC"):
+					Debug.Log("NPC!");
 			  		hit.transform.gameObject.GetComponent<NPC>().Talk();
 			  		break;
 			  	case ("Mirror"):
@@ -240,6 +268,11 @@ public class Player : MonoBehaviour {
 			  	case ("LightBeacon"):
 			  		hit.transform.gameObject.GetComponent<LightBeacon>().TakeLight();
 			  		break;
+				case("Diamond"):
+					Debug.Log("Hello");
+					hasDiamond = true;
+					GrabMineral(hit.transform.gameObject);
+					break;
 				default:
 					break;
 			  }
@@ -263,6 +296,9 @@ public class Player : MonoBehaviour {
 		}
 	}
 	
+	private void GrabMineral(GameObject m){
+		m.GetComponent<MineralBlock>().FollowPlayer();
+	}
 	
 	private void PickUpKey(GameObject key){
 			
@@ -330,10 +366,6 @@ public class Player : MonoBehaviour {
 		}
 		
 		return "";
-	}
-	
-	private void Death(){
-		// Reset the player to "spawn point" or entrance to room
 	}
 	
 	private void Turn(string direction){

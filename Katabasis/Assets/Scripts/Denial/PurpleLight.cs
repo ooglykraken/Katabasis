@@ -11,12 +11,18 @@ public class PurpleLight : MonoBehaviour {
 	}
 	
 	public void OnTriggerEnter(Collider c){
+		// Debug.Log(c.transform.parent.gameObject.name);
 		if(c.tag == "PurpleLight"){
 			// Debug.Log(c.transform.parent.gameObject.name);
 			switch(c.transform.parent.gameObject.name){
-				case ("Box-Fake"):
+				// case ("Box-Fake"):
+					// revealedObjects.Add(c.transform.parent.gameObject);
+					// FakeBoxOff(c.transform.parent.gameObject);
+					// break;
+				case ("PurpleLightDoor"):
+					Debug.Log("Found you!");
 					revealedObjects.Add(c.transform.parent.gameObject);
-					FakeBoxOff(c.transform.parent.gameObject);
+					ChangeDoor(c.transform.parent.gameObject);
 					break;
 				case ("Box-Invisible"):
 					revealedObjects.Add(c.transform.parent.gameObject);
@@ -36,10 +42,7 @@ public class PurpleLight : MonoBehaviour {
 					revealedObjects.Add(c.gameObject);
 					ChangeWall(c.gameObject);
 					break;
-				case ("PurpleLightDoor"):
-					revealedObjects.Add(c.gameObject);
-					ChangeDoor(c.gameObject);
-					break;
+				
 				default:
 					break;
 			}
@@ -50,10 +53,10 @@ public class PurpleLight : MonoBehaviour {
 		if(c.tag == "PurpleLight"){
 			// Debug.Log(c.transform.parent.gameObject.name);
 			switch(c.transform.parent.gameObject.name){
-				case ("Box-Fake"):
-					revealedObjects.Remove(c.transform.parent.gameObject);
-					FakeBoxOn(c.transform.parent.gameObject);
-					break;
+				// case ("Box-Fake"):
+					// revealedObjects.Remove(c.transform.parent.gameObject);
+					// FakeBoxOn(c.transform.parent.gameObject);
+					// break;
 				case ("Box-Invisible"):
 					revealedObjects.Remove(c.transform.parent.gameObject);
 					InvisibleBoxOff(c.transform.parent.gameObject);
@@ -97,44 +100,48 @@ public class PurpleLight : MonoBehaviour {
 	}
 	
 	private void ChangeWall(GameObject g){
-		Renderer wallRenderer = g.transform.Find("Model").GetComponent<Renderer>();
+		MeshRenderer wallRenderer = g.transform.Find("Model").GetComponent<MeshRenderer>();
 		
 		if(wallRenderer.enabled){
-			g.GetComponent<BoxCollider>().center = 2 * Vector3.forward;
+			g.GetComponent<Collider>().enabled = false;
 			wallRenderer.enabled = false;
 		} else {
-			g.GetComponent<BoxCollider>().center = Vector3.zero;
+			// g.GetComponent<BoxCollider>().center = Vector3.zero;
+			g.GetComponent<Collider>().enabled = true;
 			wallRenderer.enabled = true;
 		}
 	}
 	
 	private void ChangeDoor(GameObject g){
-		Renderer doorRenderer = g.transform.GetComponent<MeshRenderer>();
+		SpriteRenderer doorRenderer = g.transform.Find("Sprite").GetComponent<SpriteRenderer>();
+		BoxCollider doorCollder = g.transform.Find("Collider").GetComponent<BoxCollider>();
+		
+		Debug.Log(doorRenderer.enabled);
 		
 		if(doorRenderer.enabled)
 		{
-			g.GetComponent<BoxCollider>().center = 2*Vector3.forward;
+			doorCollder.enabled = false;
 			doorRenderer.enabled = false;
 		}
 		else
 		{
-			g.GetComponent<BoxCollider>().center = Vector3.zero;
+			doorCollder.enabled = true;
 			doorRenderer.enabled = true;
 		}
 	}
 	
 	// This means the box is now revealed
-	private void FakeBoxOn(GameObject g){
-		Transform colliderTransform = g.transform.Find("Collider");
-		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+	// private void FakeBoxOn(GameObject g){
+		// Transform colliderTransform = g.transform.Find("Collider");
+		// GameObject spriteObject = g.transform.Find("Sprite").gameObject;
 		
 		// Debug.Log("I'm a fake box and I'm being turned on");
 		
-		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
-		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-		spriteObject.SetActive(true);
+		// colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
+		// g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		// spriteObject.SetActive(true);
 
-	}
+	// }
 	
 	// This means the box is now revealed
 	private void InvisibleBoxOn(GameObject g){
@@ -149,16 +156,16 @@ public class PurpleLight : MonoBehaviour {
 
 	}
 	
-	private void FakeBoxOff(GameObject g){
-		Transform colliderTransform = g.transform.Find("Collider");
-		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+	// private void FakeBoxOff(GameObject g){
+		// Transform colliderTransform = g.transform.Find("Collider");
+		// GameObject spriteObject = g.transform.Find("Sprite").gameObject;
 		
 		// Debug.Log("I'm a fake box and I'm being turned off");
 		
-		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
-		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-		spriteObject.SetActive(false);
-	}
+		// colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
+		// g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		// spriteObject.SetActive(false);
+	// }
 	
 	private void InvisibleBoxOff(GameObject g){
 		Transform colliderTransform = g.transform.Find("Collider");
@@ -176,9 +183,9 @@ public class PurpleLight : MonoBehaviour {
 		foreach(GameObject g in revealedObjects){
 			if(g.tag == "Box"){
 				switch(g.name){
-					case ("Box-Fake"):
-						FakeBoxOn(g);
-						break;
+					// case ("Box-Fake"):
+						// FakeBoxOn(g);
+						// break;
 					case ("Box-Invisible"):
 						InvisibleBoxOff(g);
 						break;

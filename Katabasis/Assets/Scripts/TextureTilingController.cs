@@ -3,7 +3,9 @@ using System.Collections;
 
 [ExecuteInEditMode]
 public class TextureTilingController : MonoBehaviour {
-
+	
+	private bool isAdjusted;
+	
     // Give us the texture so that we can scale proportianally the width according to the height variable below
     // We will grab it from the meshRenderer
     public Texture texture;
@@ -15,9 +17,17 @@ public class TextureTilingController : MonoBehaviour {
     // Use this for initialization
     void Start () {
 		// texture = gameObject.texture;
+		// #if !UNITY_EDITOR 
+		if(!isAdjusted){
+			gameObject.GetComponent<Renderer>().material = Instantiate(gameObject.GetComponent<Renderer>().material);
+		}
+		// #endif
+		
         this.prevScale = gameObject.transform.lossyScale;
         this.prevTextureToMeshY = this.textureToMeshY;
-
+	
+		isAdjusted = false;
+		
         this.UpdateTiling();
     }
 
@@ -43,5 +53,7 @@ public class TextureTilingController : MonoBehaviour {
         float textureToMeshX = ((float)this.texture.width/this.texture.height)*this.textureToMeshY;
 
         gameObject.GetComponent<Renderer>().sharedMaterial.mainTextureScale = new Vector2(planeSizeX*gameObject.transform.lossyScale.x/textureToMeshX, planeSizeY*gameObject.transform.lossyScale.y/textureToMeshY);
+		
+		isAdjusted = true;
     }
 }

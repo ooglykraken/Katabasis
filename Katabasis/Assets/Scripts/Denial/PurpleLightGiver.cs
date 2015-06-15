@@ -14,10 +14,8 @@ public class PurpleLightGiver : MonoBehaviour {
 			c.gameObject.GetComponent<Player>().hasLens = true;
 
 			// GameObject.Find("Player").
-			TextBox.Instance().UpdateText("You now have the Purple Light on 2. It will allow you to see what really is.");
-
-			TextBox.Instance().UpdateText("You now have the Purple Light on 2. It will allow you to see what really is.");
-
+			transform.Find("Spotlight").GetComponent<Light>().enabled = false;
+			TextBox.Instance().UpdateText("Your lantern doesn't deny the truth (press 2)");
 		}
 	}
 }

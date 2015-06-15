@@ -3,10 +3,12 @@ using System.Collections;
 
 public class TextBox : MonoBehaviour {
 
-	private int timeToKillText = 300;
+	private int timeToKillText = 250;
 	private int timer;
 
 	public GameObject player;
+	
+	public Transform focus;
 	
 	public TextMesh txtBox;
 	
@@ -14,6 +16,8 @@ public class TextBox : MonoBehaviour {
 		txtBox = gameObject.GetComponent<TextMesh>();
 		
 		txtBox.text = "";
+		
+		focus = GameObject.Find("Player").transform;
 	}
 	
 	public void FixedUpdate(){
@@ -23,14 +27,24 @@ public class TextBox : MonoBehaviour {
 			timer--;
 		}
 		
-		FollowPlayer();
+		Follow();
 	}
 	
-	private void FollowPlayer(){
-		transform.position = player.transform.position + new Vector3(0f, 1.4f, 0f);
+	private void Follow(){
+		transform.position = focus.position + new Vector3(0f, 1.4f, 0f);
 	}
 	
 	public void UpdateText(string s){
+		focus = player.transform;
+	
+		txtBox.text = s;
+		
+		timer = timeToKillText;
+	}
+	
+	public void UpdateText(Transform t, string s){
+		focus = t;
+		
 		txtBox.text = s;
 		
 		timer = timeToKillText;

@@ -10,7 +10,8 @@ public class RedLightGiver : MonoBehaviour {
 		if(c.transform.tag == "Player")
 		{
 			c.gameObject.GetComponent<Player>().hasLaser = true;
-			textBox.GetComponent<TextBox>().UpdateText("You now have the red light on 3. Use it to break obstacles or remove enemies...");
+			transform.Find("Spotlight").GetComponent<Light>().enabled = false;
+			textBox.GetComponent<TextBox>().UpdateText("Your lantern now channel your anger (press 3)");
 		}
 	}
 }
