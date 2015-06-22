@@ -13,7 +13,11 @@ public class MultiFloorSwitch : MonoBehaviour {
 	
 	bool isFlipped;
 	
-	public void FixedUpdate()
+	public void Awake(){
+		isFlipped = false;
+	}
+	
+	public void Update()
 	{
 		if (counter == numberOfSwitches)
 		{

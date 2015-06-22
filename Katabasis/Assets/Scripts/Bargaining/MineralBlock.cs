@@ -21,12 +21,16 @@ public class MineralBlock : MonoBehaviour {
 	}
 	
 	public void Update(){
-		if(isFollowing && playerTransform != null){
-			Follow();
+		if(isFollowing && gameObject.GetComponent<Collider>().enabled){
+			gameObject.GetComponent<Collider>().enabled = false;
 		}
 	}
 	
 	public void FixedUpdate(){
+		if(isFollowing && playerTransform != null){
+			Follow();
+		}
+	
 		grounded = Ground();
 	
 		Gravity();

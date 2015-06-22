@@ -6,7 +6,7 @@ public class Laser : MonoBehaviour {
 	private int laserDuration = 20;
 	public int laserTimer;
 	
-	private int laserRange = 10;
+	private int laserRange = 15;
 	
 	public MeshRenderer beamMesh;
 	
@@ -52,8 +52,9 @@ public class Laser : MonoBehaviour {
 				break;
 		}
 	
-		Vector3 ray = transform.parent.position;
-		if (Physics.CapsuleCast(ray, ray, 2f, transform.forward, out hit, distance)) {
+		Vector3 ray = new Vector3(transform.parent.Find("Collider").position.x, transform.parent.Find("Collider").position.y, transform.parent.position.z);
+		if (Physics.SphereCast(ray - positionModifier, 1f, transform.forward, out hit, distance)) {
+			Debug.Log(hit.transform.tag);
 			if(hit.transform.tag == "Box"){
 				// Debug.Log("IT'S A BEAM!");
 				// laserTimer = laserDuration;
@@ -62,13 +63,13 @@ public class Laser : MonoBehaviour {
 				Debug.Log(hit.transform.tag);
 				hit.transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>().enabled = false;
 				hit.transform.Find("Collider").gameObject.GetComponent<Collider>().enabled = false;
-			} else if(hit.transform.tag == "Enemy"){
+			} else if(hit.transform.tag == "Monster"){
 			
 				Debug.Log("Enemy Hit");
-				hit.transform.gameObject.SetActive(false);
-			} else if(hit.transform.tag == "Breakable"){
-				GameObject g = hit.transform.gameObject;
-				g.GetComponent<Collider>().enabled = false;
+				hit.transform.gameObject.GetComponent<DepMonsterAI>().Kill();
+			} else if(hit.transform.parent.tag == "Breakable"){
+				GameObject g = hit.transform.parent.gameObject;
+				g.transform.Find("Collider").gameObject.GetComponent<Collider>().enabled = false;
 				g.transform.Find("Model").gameObject.GetComponent<MeshRenderer>().enabled = false;
 			} else {
 			}

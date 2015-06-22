@@ -17,18 +17,25 @@ public class LightBeacon : MonoBehaviour {
 	{
 		if (isOn)
 		{
-			Debug.Log("Taking");
+			// SpriteOrderer.Instance().allSpriteRenderers.Remove(transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
 			transform.FindChild("Light").gameObject.SetActive(false);
 			transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>().sprite = offSprite;
+			// SpriteOrderer.Instance().allSpriteRenderers.Add(transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
+			
 			beaconControl.GetComponent<SpawnandBeaconControl>().AddBeaconAndSpawnEnemy(gameObject);
+			
 			isOn = false;
 		}
 	}
 	
 	public void ReturnLight()
 	{
+	
+		// SpriteOrderer.Instance().allSpriteRenderers.Remove(transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
 		transform.FindChild("Light").gameObject.SetActive(true);
 		transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>().sprite = onSprite;
+		// SpriteOrderer.Instance().allSpriteRenderers.Add(transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
+		
 		isOn = true;
 	}
 }

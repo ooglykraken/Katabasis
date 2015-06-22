@@ -7,6 +7,11 @@ public class SpawnandBeaconControl : MonoBehaviour {
 	private List<GameObject> beacons;
 	private List<GameObject> monsters;
 	
+	private static int numberOfMonsters = 7;
+	
+	private int monsterIndex;
+	
+	private bool allBeaconsActivated;
 	
 	public GameObject monster;
 	public GameObject player;
@@ -16,45 +21,79 @@ public class SpawnandBeaconControl : MonoBehaviour {
 	
 	public GameObject teleLocation;
 	
-	
 	public bool hasTeleported;
 	
 	void Awake()
 	{
 		hasTeleported = false;
+		allBeaconsActivated = false;
 		beacons = new List<GameObject>();
 		monsters = new List<GameObject>();
+		
+		monsterIndex = 0;
+		// monsters.Clear();
+		for(int i = 0; i < numberOfMonsters; i++){
+			newMonster = Instantiate(Resources.Load("Depression/DepressionMonster", typeof(GameObject)) as GameObject) as GameObject;
+			newMonster.GetComponent<DepMonsterAI>().player = player;
+			newMonster.GetComponent<DepMonsterAI>().spawnControl = gameObject;
+			monsters.Add(newMonster);
+			newMonster.GetComponent<DepMonsterAI>().Kill();
+			newMonster.GetComponent<DepMonsterAI>().isDead = false;
+			// SpriteOrderer.Instance().allSpriteRenderers.Add(newMonster.transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
+		}
 	}
 	
-	void FixedUpdate()
-	{
-		if(!hasTeleported && beacons.Count == 7)
+	public void Update(){
+		if(!hasTeleported && player.GetComponent<Player>().hasFloorKey)
 		{
-			player.transform.position = teleLocation.transform.position;
-			hasTeleported = true;
+			bool willTeleport = false;
+		
+			foreach(GameObject m in monsters){
+				if(m.GetComponent<DepMonsterAI>().isDead){
+					willTeleport = true;
+				} else {
+					willTeleport = false;
+					break;
+				}
+			}
+			
+			if(willTeleport){
+				Gameplay.Instance().spawnLocation.gameObject.GetComponent<AudioSource>().Play();
+				player.transform.position = teleLocation.transform.position;
+				// player.GetComponent<Player>().Teleport();
+				hasTeleported = true;
+			}
 		}
+		
+		if(beacons.Count == 7 && !allBeaconsActivated){
+			RevealKey();
+			TextBox.Instance().UpdateText("I know the key is here now");
+			allBeaconsActivated = true;
+		}
+	}
+	
+	public void FixedUpdate()
+	{
+		
 	}
 	
 	public void AddBeaconAndSpawnEnemy(GameObject beacon)
 	{
-		beacons.Add(beacon);
-		SpawnMonster();
+		if(!allBeaconsActivated){
+			beacons.Add(beacon);
+			SpawnMonster();
+		}
 	}
 	
 	public void SpawnMonster()
 	{
-		Debug.Log ("SpawnMonster called");
-		proposedPos =  Random.onUnitSphere * 16;
-		while(Vector3.Distance(proposedPos, player.transform.position) < 14) {
-			proposedPos =  Random.onUnitSphere * 16;
-		}
-		newPos = proposedPos;
-		newMonster = (GameObject) Instantiate (monster, newPos, monster.transform.rotation);
-		newMonster.GetComponent<DepMonsterAI>().player = player;
-		newMonster.GetComponent<DepMonsterAI>().spawnControl = gameObject;
-		monsters.Add(newMonster);
+		monsters[monsterIndex].GetComponent<DepMonsterAI>().Respawn();
 		
-		SpriteOrderer.Instance().allSpriteRenderers.Add(newMonster.transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>());
+		monsterIndex++;
+		
+		if(monsterIndex == 7){
+			monsterIndex = 0;
+		}
 	}
 	
 	public void RemoveBeacon()
@@ -64,5 +103,12 @@ public class SpawnandBeaconControl : MonoBehaviour {
 			beacons[0].GetComponent<LightBeacon>().ReturnLight();
 			beacons.RemoveAt(0);
 		}
+	}
+	
+	private void RevealKey(){
+		GameObject key = GameObject.Find("Key");
+	
+		key.transform.Find("Sprite").GetComponent<SpriteRenderer>().enabled = true;
+		key.transform.Find("Collider").GetComponent<Collider>().enabled = true;
 	}
 }

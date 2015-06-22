@@ -8,13 +8,23 @@ public class WallSwitch : MonoBehaviour {
 	
 	public GameObject target;
 	
+	private static float activationDistance = 1.5f;
+	
 	public string function;
 	public string argument;
 	
-	bool isFlipped;
+	public bool isFlipped;
 	
 	// each switch should get one piece (a floor prefab) and turns the mesh renderer on.
-	public GameObject bridgePiece;
+	// public GameObject bridgePiece;
+	
+	public void Update(){
+		if(!isFlipped){
+			if(PlayerDistance() <= activationDistance){
+				ActivateSwitch();
+			}
+		}
+	}
 	
 	public void OnTriggerEnter(Collider c){
 		if (c.name != "Lens")
@@ -49,12 +59,16 @@ public class WallSwitch : MonoBehaviour {
 			}
 		}
 		
-		if (bridgePiece != null)
-		{
-			Debug.Log("Floor is active now!");
-			bridgePiece.SetActive (true);
-			GameObject.Find("Player").GetComponent<Player>().Teleport();
-		}
+		// if (bridgePiece != null)
+		// {
+			// Debug.Log("Floor is active now!");
+			// bridgePiece.SetActive (true);
+			// GameObject.Find("Player").GetComponent<Player>().Teleport();
+		// }
+	}
+	
+	private float PlayerDistance(){
+		return Vector3.Distance(transform.position, GameObject.Find("Player").transform.position);
 	}
 	
 	public void Drop(string s){
@@ -69,6 +83,7 @@ public class WallSwitch : MonoBehaviour {
 		switch(Gameplay.Instance().currentLevel){
 			case 0:
 				newThing.transform.position = new Vector3(-6f, 43f, -2f);
+				newThing.GetComponent<Box>().boxDrop.Play();
 				break;
 			case 2:
 				newThing.transform.parent = GameObject.Find("FloorTiles").transform;

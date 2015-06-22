@@ -6,129 +6,176 @@ public class PurpleLight : MonoBehaviour {
 	
 	public List<GameObject> revealedObjects = new List<GameObject>();
 	
+	private List<GameObject> allPurpleLightObjects = new List<GameObject>();
+	
+	private static float distanceToReveal = 4.5f;
+	
+	public void Awake(){
+		allPurpleLightObjects.Clear();
+		foreach(GameObject g in GameObject.FindGameObjectsWithTag("PurpleLight")){
+			allPurpleLightObjects.Add(g.transform.parent.gameObject);
+		}
+	}
+	
 	public void Update(){
-		
-	}
-	
-	public void OnTriggerEnter(Collider c){
-		// Debug.Log(c.transform.parent.gameObject.name);
-		if(c.tag == "PurpleLight"){
-			// Debug.Log(c.transform.parent.gameObject.name);
-			switch(c.transform.parent.gameObject.name){
-				// case ("Box-Fake"):
-					// revealedObjects.Add(c.transform.parent.gameObject);
-					// FakeBoxOff(c.transform.parent.gameObject);
-					// break;
-				case ("PurpleLightDoor"):
-					Debug.Log("Found you!");
-					revealedObjects.Add(c.transform.parent.gameObject);
-					ChangeDoor(c.transform.parent.gameObject);
-					break;
-				case ("Box-Invisible"):
-					revealedObjects.Add(c.transform.parent.gameObject);
-					InvisibleBoxOn(c.transform.parent.gameObject);
-					break;
-				default:
-					break;
-			}
-		} else {
-			// Debug.Log(c.transform.gameObject.name);
-			switch(c.gameObject.name){
-				case ("PurpleLightFloor"):
-					revealedObjects.Add(c.gameObject);
-					ChangeFloor(c.gameObject);
-					break;
-				case ("PurpleLightWall"):
-					revealedObjects.Add(c.gameObject);
-					ChangeWall(c.gameObject);
-					break;
-				
-				default:
-					break;
+		foreach(GameObject g in allPurpleLightObjects){
+			if(revealedObjects.Contains(g) && DistanceFromPlayer(g.transform) > distanceToReveal){
+				ObjectLeavingZone(g);
+			} else if(!revealedObjects.Contains(g) && DistanceFromPlayer(g.transform) <= distanceToReveal){
+				ObjectEnteringZone(g);
+			} else { 
 			}
 		}
 	}
 	
-	public void OnTriggerExit(Collider c){
-		if(c.tag == "PurpleLight"){
-			// Debug.Log(c.transform.parent.gameObject.name);
-			switch(c.transform.parent.gameObject.name){
-				// case ("Box-Fake"):
+	public void ObjectEnteringZone(GameObject g){
+		revealedObjects.Add(g);
+		Change(g);
+	}
+	
+	public void ObjectLeavingZone(GameObject g){
+		revealedObjects.Remove(g);
+		Change(g);
+	}
+	
+	// public void OnTriggerExit(Collider c){
+		// if(c.tag == "PurpleLight"){
+			// Debug.Log(c.transform.parent.name);
+			// switch(c.transform.parent.gameObject.name){
+				// case ("Box-Invisible"):
 					// revealedObjects.Remove(c.transform.parent.gameObject);
-					// FakeBoxOn(c.transform.parent.gameObject);
+					// Change(c.transform.parent.gameObject);
 					// break;
-				case ("Box-Invisible"):
-					revealedObjects.Remove(c.transform.parent.gameObject);
-					InvisibleBoxOff(c.transform.parent.gameObject);
-					break;
-				default:
-					break;
-			}
-		} else {
-			// Debug.Log(c.transform.gameObject.name);
-			switch(c.gameObject.name){
-				case ("PurpleLightFloor"):
-					revealedObjects.Remove(c.gameObject);
-					ChangeFloor(c.gameObject);
-					break;
-				case ("PurpleLightWall"):
-					revealedObjects.Remove(c.gameObject);
-					ChangeWall(c.gameObject);
-					break;
-				case ("PurpleLightDoor"):
-					revealedObjects.Remove(c.gameObject);
-					ChangeDoor(c.gameObject);
-					break;
-				default:
-					break;
-			}
+				// case ("PurpleLightFloor"):
+					// revealedObjects.Remove(c.transform.parent.gameObject);
+					// Change(c.transform.parent.gameObject);
+					// break;
+				// case ("PurpleLightWall"):
+					// revealedObjects.Remove(c.transform.parent.gameObject);
+					// Change(c.transform.parent.gameObject);
+					// break;
+				// case ("PurpleLightDoor"):
+					// revealedObjects.Remove(c.transform.parent.gameObject);
+					// Change(c.transform.parent.gameObject);
+					// break;
+				// default:
+					// break;
+			// }
+		// }
+	// }
+	
+	public void LensOff(){
+		foreach(GameObject g in revealedObjects){
+			Change(g);
 		}
+		
+		revealedObjects.Clear();
 	}
 	
-	private void ChangeFloor(GameObject g){
-		Renderer floorRenderer = g.GetComponent<Renderer>();
+	private float DistanceFromPlayer(Transform t){
+		return Vector3.Distance(t.position, transform.parent.position);
+	}
+	
+	private void Change(GameObject g){
+
+		if(g.transform.Find("Sprite")){
+		
+			SpriteRenderer renderer = g.transform.Find("Sprite").GetComponent<SpriteRenderer>();
+			BoxCollider collider = g.transform.Find("Collider").GetComponent<BoxCollider>();
+			
+			if(g.name == "Box-Invisible"){
+				if(renderer.color.a != 1){
+					renderer.color = new Vector4(renderer.color.r, renderer.color.g, renderer.color.b, 1f);
+				}else {
+					renderer.color = new Vector4(renderer.color.r, renderer.color.g, renderer.color.b, .2f);
+				}
+				return;
+			}
+			
+			if(renderer.enabled)
+			{
+				renderer.enabled = false;
+				collider.enabled = false;
+			}
+			else
+			{
+				renderer.enabled = true;
+				collider.enabled = true;
+			}
+			
+		} else if(g.transform.Find("Model")){
+		
+			MeshRenderer renderer = g.transform.Find("Model").GetComponent<MeshRenderer>();
+			BoxCollider collider = g.transform.Find("Collider").GetComponent<BoxCollider>();
+			
+			if(renderer.enabled)
+			{
+				renderer.enabled = false;
+				collider.enabled = false;
+			}
+			else
+			{
+				renderer.enabled = true;
+				collider.enabled = true;
+			}
+		} else {
+			Debug.Log("Purple light object not accounted for");
+		}
+	}
+
+	private static PurpleLight instance = null;
+	
+	public static PurpleLight Instance(){
+		if(instance == null){
+			instance = GameObject.Find("Lens").GetComponent<PurpleLight>();
+		}
+		
+		return instance;
+	}
+	// private void ChangeFloor(GameObject g){
+		// Renderer floorRenderer = g.GetComponent<Renderer>();
 		
 		// Debug.Log(g.transform.parent.name);
 		
-		if(floorRenderer.enabled){
-			g.GetComponent<BoxCollider>().center = Vector3.back; 
-			floorRenderer.enabled = false;
-		} else {
-			g.GetComponent<BoxCollider>().center = Vector3.zero;
-			floorRenderer.enabled = true;
-		}
-	}
-	
-	private void ChangeWall(GameObject g){
-		MeshRenderer wallRenderer = g.transform.Find("Model").GetComponent<MeshRenderer>();
-		
-		if(wallRenderer.enabled){
-			g.GetComponent<Collider>().enabled = false;
-			wallRenderer.enabled = false;
-		} else {
+		// if(floorRenderer.enabled){
+			// g.GetComponent<BoxCollider>().center = Vector3.back; 
+			// floorRenderer.enabled = false;
+		// } else {
 			// g.GetComponent<BoxCollider>().center = Vector3.zero;
-			g.GetComponent<Collider>().enabled = true;
-			wallRenderer.enabled = true;
-		}
-	}
+			// floorRenderer.enabled = true;
+		// }
+	// }
 	
-	private void ChangeDoor(GameObject g){
-		SpriteRenderer doorRenderer = g.transform.Find("Sprite").GetComponent<SpriteRenderer>();
-		BoxCollider doorCollder = g.transform.Find("Collider").GetComponent<BoxCollider>();
+	// private void ChangeWall(GameObject g){
+		// MeshRenderer wallRenderer = g.transform.Find("Model").GetComponent<MeshRenderer>();
 		
-		Debug.Log(doorRenderer.enabled);
+		// if(wallRenderer.enabled){
+			// g.GetComponent<Collider>().enabled = false;
+			// wallRenderer.enabled = false;
+		// } else {
+			// g.GetComponent<BoxCollider>().center = Vector3.zero;
+			// g.GetComponent<Collider>().enabled = true;
+			// wallRenderer.enabled = true;
+		// }
+	// }
+	
+	// private void ChangeDoor(GameObject g){
+		// SpriteRenderer doorRenderer = g.transform.Find("Sprite").GetComponent<SpriteRenderer>();
+		// BoxCollider doorCollder = g.transform.Find("Collider").GetComponent<BoxCollider>();
 		
-		if(doorRenderer.enabled)
-		{
-			doorCollder.enabled = false;
-			doorRenderer.enabled = false;
-		}
-		else
-		{
-			doorCollder.enabled = true;
-			doorRenderer.enabled = true;
-		}
-	}
+		// Debug.Log(doorRenderer.enabled);
+		
+		// if(doorRenderer.enabled)
+		// {
+			// doorCollder.enabled = false;
+			// doorRenderer.enabled = false;
+		// }
+		// else
+		// {
+			// doorCollder.enabled = true;
+			// doorRenderer.enabled = true;
+		// }
+	// }
 	
 	// This means the box is now revealed
 	// private void FakeBoxOn(GameObject g){
@@ -144,17 +191,17 @@ public class PurpleLight : MonoBehaviour {
 	// }
 	
 	// This means the box is now revealed
-	private void InvisibleBoxOn(GameObject g){
-		Transform colliderTransform = g.transform.Find("Collider");
-		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+	// private void InvisibleBoxOn(GameObject g){
+		// Transform colliderTransform = g.transform.Find("Collider");
+		// GameObject spriteObject = g.transform.Find("Sprite").gameObject;
 		
 		// Debug.Log("I'm an invisible box and I'm being turned on");
 		
-		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, 0f);
-		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-		spriteObject.SetActive(true);
+		// colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, 0f);
+		// g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		// spriteObject.SetActive(true);
 
-	}
+	// }
 	
 	// private void FakeBoxOff(GameObject g){
 		// Transform colliderTransform = g.transform.Find("Collider");
@@ -167,59 +214,14 @@ public class PurpleLight : MonoBehaviour {
 		// spriteObject.SetActive(false);
 	// }
 	
-	private void InvisibleBoxOff(GameObject g){
-		Transform colliderTransform = g.transform.Find("Collider");
-		GameObject spriteObject = g.transform.Find("Sprite").gameObject;
+	// private void InvisibleBoxOff(GameObject g){
+		// Transform colliderTransform = g.transform.Find("Collider");
+		// GameObject spriteObject = g.transform.Find("Sprite").gameObject;
 		
 		// Debug.Log("I'm an invisible box and I'm being turned off");
 		
-		colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
-		g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
-		spriteObject.SetActive(false);
-	}
-	
-	
-	public void LensOff(){
-		foreach(GameObject g in revealedObjects){
-			if(g.tag == "Box"){
-				switch(g.name){
-					// case ("Box-Fake"):
-						// FakeBoxOn(g);
-						// break;
-					case ("Box-Invisible"):
-						InvisibleBoxOff(g);
-						break;
-					default:
-						Debug.Log("Something is wrong! Lens Off");
-						break;
-				}
-			} else {
-				switch(g.name){
-					case ("PurpleLightFloor"):
-						ChangeFloor(g);
-						break;
-					case ("PurpleLightWall"):
-						ChangeWall(g);
-						break;
-					case ("PurpleLightDoor"):
-						ChangeDoor(g);
-						break;
-					default:
-						break;
-				}
-			}
-		}
-		
-		revealedObjects.Clear();
-	}
-	
-	private static PurpleLight instance = null;
-	
-	public static PurpleLight Instance(){
-		if(instance == null){
-			instance = GameObject.Find("Lens").GetComponent<PurpleLight>();
-		}
-		
-		return instance;
-	}
+		// colliderTransform.position = new Vector3(colliderTransform.position.x, colliderTransform.position.y, -2f);
+		// g.transform.position = new Vector3(g.transform.position.x, g.transform.position.y, 0f);
+		// spriteObject.SetActive(false);
+	// }
 }

@@ -4,31 +4,29 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	public float movementSpeed;
+	
 	private float startingLightRange;
+	private float gravity;
 	
 	private int verticalDirection;
 	private int horizontalDirection;
 	
-	private Transform position;
-	
-	private Vector3 playerForward;
 	public int playerDirection;
-	
-	public bool hasFloorKey;
-	public bool isWalking;
-	// private bool isDoorOpen;
 
-	public bool hasLantern;
-	public bool hasLens;
-	public bool hasLaser;
-	private bool holdingBox;
-	
 	public bool hasDiamond;
 	public bool hasSapphire;
 	public bool hasEmerald;
 	public bool hasGold;
+	public bool hasFloorKey;
+	public bool isWalking;
+	public bool hasLantern;
+	public bool hasLens;
+	public bool hasLaser;
 	
-	private bool isSlowed;
+	private bool holdingBox;
+	// private bool grounded;
+
+	private Transform position;
 	private Transform lensTransform;
 	private Transform lanternTransform;
 	private Transform laserTransform;
@@ -41,6 +39,8 @@ public class Player : MonoBehaviour {
 	private SpriteRenderer sprite;
 	
 	public Vector3 teleportLocation;
+	
+	private Vector3 playerForward;
 
 	public Sprite back;
 	public Sprite front;
@@ -68,6 +68,8 @@ public class Player : MonoBehaviour {
 		playerAnimator = transform.Find("Animator").gameObject.GetComponent<Animator>();
 		
 		position = transform;
+		
+		// grounded = false;
 	}
 	
 	public void OnCollisionEnter(Collision c){
@@ -112,23 +114,17 @@ public class Player : MonoBehaviour {
 		horizontalDirection = (int)Input.GetAxisRaw("Horizontal");
 
 		string floorCast = CheckFloor();
-
-		if(floorCast == "Floor"  || floorCast == "FloorSwitch" || floorCast == "InvisibleFloor" || floorCast == "Box" || floorCast == "WallSwitch" || floorCast == "Statue" || floorCast == "ConveyorBelt"){
-			// Debug.Log("Im moving");
-		// Debug.Log("Stuff is normal");
+		Debug.Log(floorCast);
+		
+		if(PassableTerrain(floorCast)){
+			// Debug.Log("Moving");
 			Move();
 		} else if(floorCast == "LowerBoundary"){
 			Teleport();
-			Debug.Log("Tele");
+			// Debug.Log("Tele");
 		}else {
 			GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
-		
-		// LoseLight();
-		
-		// if(!CheckForWalls() ){
-			// lantern.GetComponent<Light>().range = startingLightRange;
-		// }
 	}
 	
 	public void Update(){
@@ -227,26 +223,33 @@ public class Player : MonoBehaviour {
 	private void Activate()
 	{
 		RaycastHit hit;
-		Vector3 ray = Vector3.zero;
+		Vector3 ray = new Vector3(transform.Find("Collider").position.x, transform.Find("Collider").position.y, transform.position.z); //Vector3.zero;
+		
+		float radius = 1f;
+		
+		Vector3 direction = Vector3.zero;
 		switch(playerDirection){
 			case(0):
-				ray = -transform.up;
+				direction = -transform.up;
 				break;
 			case(1):
-				ray = -transform.right;
+				direction = -transform.right;
 				break;
 			case(2):
-				ray = transform.up;
+				direction = transform.up;
 				break;
 			case(3):
-				ray = transform.right;
+				direction = transform.right;
 				break;
 			default:
 				break;
 		}
 		
-		if (Physics.Raycast(transform.position - ray/2f, ray, out hit, 1.5f))
+		// Shoot a ray from 
+		
+		if (Physics.SphereCast(ray - direction, radius, direction, out hit, 1f))
 		{
+			
 			  switch (hit.transform.tag)
 			  {
 			  	case ("Box"):
@@ -269,7 +272,7 @@ public class Player : MonoBehaviour {
 			  		hit.transform.gameObject.GetComponent<LightBeacon>().TakeLight();
 			  		break;
 				case("Diamond"):
-					Debug.Log("Hello");
+					// Debug.Log("Hello");
 					hasDiamond = true;
 					GrabMineral(hit.transform.gameObject);
 					break;
@@ -283,7 +286,7 @@ public class Player : MonoBehaviour {
 	{
 		if (!holdingBox)
 		{
-			o.transform.SetParent(gameObject.transform);
+			o.transform.SetParent(transform);
 			holdingBox = true;
 		}
 		else
@@ -351,18 +354,27 @@ public class Player : MonoBehaviour {
 		
 		// float distance = 1.1f;
 		
-		Vector3 ray = transform.position + new Vector3(horizontalDirection *.35f, verticalDirection * .35f, -.2f);
+		Vector3 ray = transform.Find("Collider").position + new Vector3(horizontalDirection *.35f, verticalDirection * .35f, transform.position.z);
+		
 		if (Physics.Raycast(ray, Vector3.forward, out hit)){
-			if(hit.transform.parent && hit.transform.parent.tag == "MovingPlatform"){
+		
+			if(hit.transform.parent.parent && hit.transform.parent.parent.tag == "MovingPlatform"){
 				transform.parent = hit.transform.parent;
 			} else {
 				transform.parent = null;
 			}
-			if (hit.transform.gameObject.name == "ConveyorBelt")
+			
+			if (hit.transform.gameObject.name == "Conveyor Belt" || hit.transform.gameObject.name == "Box" || hit.transform.gameObject.name == "FloorSwitch" || hit.transform.gameObject.name == "InvisibleFloorSwitch" || hit.transform.tag == "NPC" || hit.transform.gameObject.name == "Diamond")
 			{
-				gameObject.GetComponent<Rigidbody>().velocity += hit.transform.up * 15f *Time.deltaTime;
+				// Debug.Log("Raycast Starts Here: " + ray + ". And it hits here: " + hit.point);
+				// How do we make the conveyor belt move the player
+				return hit.transform.tag;
+
+			} else {
+				// Debug.Log("Raycast Starts Here: " + ray + ". And it hits here: " + hit.point);
+				return hit.transform.parent.tag;
 			}
-			return hit.transform.tag;
+			
 		}
 		
 		return "";
@@ -452,52 +464,18 @@ public class Player : MonoBehaviour {
 		// GameObject.Find("LanternPickup").GetComponent<Light>().enabled = false;
 	}
 	
-	// public void ChangeLights(){
-		// Handle switching between lights
-		
-		// if (Input.GetKeyUp ("1") && hasLantern && !laser.GetComponent<RedLight>().isFiring){
-		// }
-
-		// if (Input.GetKeyDown ("1"))
-		// {
-			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				// PurpleLight.Instance().LensOff();
-			// }
-			// activeLight.gameObject.SetActive (false);
-			// activeLight = lantern;
-			// activeLight.gameObject.SetActive (true);
-		// }
-		
-		// if (Input.GetKeyUp ("2") && hasLens && activeLight != lens && !laser.GetComponent<RedLight>().isFiring)
-		// {
-			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				// PurpleLight.Instance().LensOff();
-			// }
-			// activeLight.gameObject.SetActive (false);
-			// activeLight = lens;
-			// activeLight.gameObject.SetActive (true);
-		// }
-		
-		// if (Input.GetKeyUp ("3") && hasLaser && !laser.GetComponent<RedLight>().isFiring)
-		// {
-			// if(activeLight == lens && PurpleLight.Instance().revealedObjects != null){
-				// PurpleLight.Instance().LensOff();
-			// }
-			// activeLight.gameObject.SetActive (false);
-			// activeLight = laser;
-			// activeLight.gameObject.SetActive (true);
-		// }
-	
-	// }
-	
 	public void SpotLantern(){
 		TextBox.Instance().UpdateText("There is a lantern on the floor.");
 	}
 	
 	public void Teleport()
 	{
-		transform.position = teleportLocation;
+		transform.position = new Vector3(teleportLocation.x, teleportLocation.y, transform.position.z);
 		Gameplay.Instance().spawnLocation.gameObject.GetComponent<AudioSource>().Play();
+	}
+	
+	private bool PassableTerrain(string s){
+		return s == "Floor" || s == "FloorSwitch" || s == "InvisibleFloor" || s == "Box" || s == "WallSwitch" || s == "Statue" || s == "ConveyorBelt" || s == "MovingPlatform" || s == "Key" || s == "StairsDown" || s == "NPC";
 	}
 	
 	// private static Player instance = null;

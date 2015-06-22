@@ -3,35 +3,42 @@ using System.Collections;
 
 public class Stairs : MonoBehaviour {
 	
-	public Material stairsMaterial;
+	// public Material stairsMaterial;
 	
-	public Material doorMaterial;
+	// public Material doorMaterial;
 	
-	public bool isOpen = false;
+	private static float distanceToOpen = 4f;
 	
-	public void OnTriggerEnter(Collider c){
-		if(GameObject.Find("Player").GetComponent<Player>().hasFloorKey){
+	private GameObject player;
+	
+	public bool isOpen;
+	
+	public void Awake(){
+		isOpen = false;
+		player = GameObject.Find("Player");
+	}
+	
+	public void Update(){
+		if(Vector3.Distance(transform.position, player.transform.position) <= distanceToOpen){
+			CheckPlayer();
+		}
+	}
+	
+	public void OpenDoors(){
+		GetComponent<AudioSource>().Play();
+			
+		transform.Find("SpriteOpen").gameObject.SetActive(true);
+		transform.Find("SpriteClosed").gameObject.SetActive(false);
+
+	}
+	
+	private void CheckPlayer(){
+		if(player.GetComponent<Player>().hasFloorKey){
 			OpenDoors();
 			isOpen = true;
 		} else {
 			TextBox.Instance().UpdateText("You need a key...");
 		}
-	}
-	
-	public void OpenDoors(){
-		Debug.Log("OPEN");
-		
-		GetComponent<AudioSource>().Play();
-		
-		
-		transform.Find("SpriteOpen").gameObject.SetActive(true);
-		
-		transform.Find("SpriteClosed").gameObject.SetActive(false);
-		// transform.Find("Model").gameObject.GetComponent<Renderer>().material = stairsMaterial;
-		
-		// transform.localScale = new Vector3(3.5f, 2f, 1f);
-		
-		gameObject.GetComponent<Collider>().enabled = false;
 	}
 	
 	private static Stairs instance = null;

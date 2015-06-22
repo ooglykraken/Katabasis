@@ -11,7 +11,7 @@ public class BoxSpawner : MonoBehaviour {
 
 	public GameObject[] boxes;
 	
-	private int boxLimit = 20;
+	private int boxLimit = 17;
 	
 	private int boxIndex;
 	

@@ -29,7 +29,7 @@ public class ConveyorBelt : MonoBehaviour {
 	public void OnCollisionStay(Collision c)
 	{
 		// Debug.Log(c.transform.parent.name);
-		if (c.gameObject.tag == "Box" || c.transform.tag == "Player")
+		if (c.transform.tag == "Box" || c.transform.tag == "Player")
 		{
 			Rigidbody rigidbody = c.gameObject.GetComponent<Rigidbody>();
 		

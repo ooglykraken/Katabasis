@@ -26,7 +26,7 @@ public class FloorSwitch : MonoBehaviour {
 		if (c.isTrigger == false)
 		{
 			
-			Debug.Log(c.name);
+			// Debug.Log(c.name);
 			
 			activatingObject = c.transform.gameObject;
 			
